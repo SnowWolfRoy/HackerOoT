@@ -200,6 +200,7 @@ build/src/overlays/actors/ovl_Bg_Mori_Hineri/%.o: OPTFLAGS := -O0
 #### Main Targets ###
 
 all: $(ROM)
+	cp  $(ROM) /mnt/c/Users/Roy/Desktop/oot-modding
 
 compress: $(ROMC)
 

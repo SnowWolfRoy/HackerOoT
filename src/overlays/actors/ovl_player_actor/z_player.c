@@ -3609,17 +3609,18 @@ s32 Player_CalcSpeedAndYawFromControlStick(PlayState* play, Player* this, f32* o
         }
 
         if (sControlStickMagnitude != 0.0f) {
-            sinFloorPitch = Math_SinS(this->floorPitch);
-            speedCap = this->unk_880;
-            floorPitchInfluence = CLAMP(sinFloorPitch, 0.0f, 0.6f);
+            sinFloorPitch = Math_SinS(this->floorPitch); // checks the current floor angle; 
+            speedCap = this->unk_880; // sets the speedCap to the boot max speed value
+            floorPitchInfluence = CLAMP(sinFloorPitch, 0.0f, 0.6f); 
 
             if (this->unk_6C4 != 0.0f) {
                 speedCap -= this->unk_6C4 * 0.008f;
                 speedCap = CLAMP_MIN(speedCap, 2.0f);
             }
 
-            *outSpeedTarget = (*outSpeedTarget * 0.14f) - (8.0f * floorPitchInfluence * floorPitchInfluence);
-            *outSpeedTarget = CLAMP(*outSpeedTarget, 0.0f, speedCap);
+            // set 0.14f for 6.0 speed. set 0.23f for 10.0 speed (roughly)
+            *outSpeedTarget = (*outSpeedTarget * 0.23f) - (8.0f * floorPitchInfluence * floorPitchInfluence); // global capping movement speed at 6 for 0.14f, reduces further for slope
+            *outSpeedTarget = CLAMP(*outSpeedTarget, 0.0f, speedCap); // speed capping based on Boot speed
 
             return true;
         }
@@ -3627,7 +3628,7 @@ s32 Player_CalcSpeedAndYawFromControlStick(PlayState* play, Player* this, f32* o
 
     return false;
 }
-
+// link at standstill, deceleration
 s32 func_8083721C(Player* this) {
     return Math_StepToF(&this->speedXZ, 0.0f, REG(43) / 100.0f);
 }
@@ -3647,6 +3648,7 @@ s32 func_8083721C(Player* this) {
  */
 s32 Player_GetMovementSpeedAndYaw(Player* this, f32* outSpeedTarget, s16* outYawTarget, f32 speedMode,
                                   PlayState* play) {
+    
     if (!Player_CalcSpeedAndYawFromControlStick(play, this, outSpeedTarget, outYawTarget, speedMode)) {
         *outYawTarget = this->actor.shape.rot.y;
 
@@ -5152,7 +5154,7 @@ void func_8083A434(PlayState* play, Player* this) {
         this->getItemId = -this->getItemId;
     }
 }
-
+// this function seems to be responsible for link auto jumping at ledges?
 s32 func_8083A4A8(Player* this, PlayState* play) {
     s16 yawDiff;
     LinkAnimationHeader* anim;
@@ -5713,7 +5715,7 @@ s32 Player_ActionChange_0(Player* this, PlayState* play) {
 
     return 0;
 }
-
+// something jumpslash related
 void func_8083BA90(PlayState* play, Player* this, s32 arg2, f32 xzSpeed, f32 yVelocity) {
     func_80837948(play, this, arg2);
     Player_SetupAction(play, this, Player_Action_80844AF4, 0);
@@ -5766,7 +5768,7 @@ s32 func_8083BC7C(Player* this, PlayState* play) {
 
     return 0;
 }
-
+// seems to be setting jump slash movement properties
 void func_8083BCD0(Player* this, PlayState* play, s32 arg2) {
     func_80838940(this, D_80853D4C[arg2][0], !(arg2 & 1) ? 5.8f : 3.5f, play, NA_SE_VO_LI_SWORD_N);
 
@@ -5776,7 +5778,7 @@ void func_8083BCD0(Player* this, PlayState* play, s32 arg2) {
     this->actionVar1 = arg2;
 
     this->yaw = this->actor.shape.rot.y + (arg2 << 0xE);
-    this->speedXZ = !(arg2 & 1) ? 6.0f : 8.5f;
+    this->speedXZ = !(arg2 & 1) ? 6.0f : 8.5f; // speedsearch
 
     this->stateFlags2 |= PLAYER_STATE2_19;
 
@@ -6067,7 +6069,7 @@ s32 func_8083C910(PlayState* play, Player* this, f32 arg2) {
             Player_AnimChangeLoopSlowMorph(play, this, &gPlayerAnim_link_swimer_swim);
             this->stateFlags1 |= PLAYER_STATE1_27 | PLAYER_STATE1_29;
             this->actionVar2 = 20;
-            this->speedXZ = 2.0f;
+            this->speedXZ = 2.0f; // water entrance swim speed
             Player_SetBootData(play, this);
             return 0;
         }
@@ -6083,7 +6085,7 @@ void func_8083CA20(PlayState* play, Player* this) {
         this->actionVar2 = -20;
     }
 }
-
+// seems to be entrance related
 void func_8083CA54(PlayState* play, Player* this) {
     this->speedXZ = 2.0f;
     gSaveContext.entranceSpeed = 2.0f;
@@ -6091,7 +6093,7 @@ void func_8083CA54(PlayState* play, Player* this) {
         this->actionVar2 = -15;
     }
 }
-
+// seems to be entrance related
 void func_8083CA9C(PlayState* play, Player* this) {
     if (gSaveContext.entranceSpeed < 0.1f) {
         gSaveContext.entranceSpeed = 0.1f;
@@ -6123,7 +6125,7 @@ void func_8083CBF0(Player* this, s16 yaw, PlayState* play) {
     Player_SetupAction(play, this, Player_Action_808423EC, 1);
     LinkAnimation_Change(play, &this->skelAnime, &gPlayerAnim_link_anchor_back_walk, 2.2f, 0.0f,
                          Animation_GetLastFrame(&gPlayerAnim_link_anchor_back_walk), ANIMMODE_ONCE, -6.0f);
-    this->speedXZ = 8.0f;
+    this->speedXZ = 8.0f; // speedsearch
     this->yaw = yaw;
 }
 
@@ -6169,7 +6171,7 @@ void func_8083CEAC(Player* this, PlayState* play) {
 }
 
 void func_8083CF10(Player* this, PlayState* play) {
-    if (this->speedXZ != 0.0f) {
+    if (this->speedXZ != 0.0f) { // speedsearch 
         func_8083C858(this, play);
     } else {
         func_8083CE0C(this, play);
@@ -6177,7 +6179,7 @@ void func_8083CF10(Player* this, PlayState* play) {
 }
 
 void func_8083CF5C(Player* this, PlayState* play) {
-    if (this->speedXZ != 0.0f) {
+    if (this->speedXZ != 0.0f) { // speedsearch
         func_8083C858(this, play);
     } else {
         func_80839F90(this, play);
@@ -6349,7 +6351,7 @@ void func_8083D53C(PlayState* play, Player* this) {
         }
     }
 }
-
+// ripple effect ? speedsearch
 void func_8083D6EC(PlayState* play, Player* this) {
     Vec3f ripplePos;
     f32 temp1;
@@ -6496,7 +6498,7 @@ void func_8083DC54(Player* this, PlayState* play) {
 
     func_80836AB8(this, func_8002DD78(this) || func_808334B4(this));
 }
-
+// speedsearch
 void func_8083DDC8(Player* this, PlayState* play) {
     s16 temp1;
     s16 temp2;
@@ -6515,12 +6517,12 @@ void func_8083DDC8(Player* this, PlayState* play) {
         func_8083DC54(this, play);
     }
 }
-
+// speedsearch
 void func_8083DF68(Player* this, f32 arg1, s16 arg2) {
     Math_AsymStepToF(&this->speedXZ, arg1, REG(19) / 100.0f, 1.5f);
     Math_ScaledStepToS(&this->yaw, arg2, REG(27));
 }
-
+// confirmed this does nothing interesting
 void func_8083DFE0(Player* this, f32* arg1, s16* arg2) {
     s16 yawDiff = this->yaw - *arg2;
 
@@ -7439,12 +7441,12 @@ void Player_Action_80840450(Player* this, PlayState* play) {
             return;
         }
 
-        func_8084029C(this, (this->speedXZ * 0.3f) + 1.0f);
+        func_8084029C(this, (this->speedXZ * 0.3f) + 1.0f); // speedsearch
         func_80840138(this, speedTarget, yawTarget);
 
         temp2 = this->unk_868;
         if ((temp2 < 6) || ((temp2 - 0xE) < 6)) {
-            Math_StepToF(&this->speedXZ, 0.0f, 1.5f);
+            Math_StepToF(&this->speedXZ, 0.0f, 1.5f); // speedsearch
             return;
         }
 
@@ -7452,13 +7454,13 @@ void Player_Action_80840450(Player* this, PlayState* play) {
         temp4 = ABS(temp3);
 
         if (temp4 > 0x4000) {
-            if (Math_StepToF(&this->speedXZ, 0.0f, 1.5f)) {
+            if (Math_StepToF(&this->speedXZ, 0.0f, 1.5f)) { // speedsearch
                 this->yaw = yawTarget;
             }
             return;
         }
 
-        Math_AsymStepToF(&this->speedXZ, speedTarget * 0.3f, 2.0f, 1.5f);
+        Math_AsymStepToF(&this->speedXZ, speedTarget * 0.3f, 2.0f, 1.5f); // speedsearch
 
         if (!(this->stateFlags3 & PLAYER_STATE3_3)) {
             Math_ScaledStepToS(&this->yaw, yawTarget, temp4 * 0.1f);
@@ -7673,7 +7675,7 @@ void Player_Action_80840DE4(Player* this, PlayState* play) {
         direction = -1;
     }
 
-    this->skelAnime.playSpeed = direction * (this->speedXZ * coeff);
+    this->skelAnime.playSpeed = direction * (this->speedXZ * coeff); // speedsearch
 
     LinkAnimation_Update(play, &this->skelAnime);
 
@@ -7726,11 +7728,11 @@ void Player_Action_80840DE4(Player* this, PlayState* play) {
             return;
         }
 
-        Math_AsymStepToF(&this->speedXZ, speedTarget * 0.4f, 1.5f, 1.5f);
+        Math_AsymStepToF(&this->speedXZ, speedTarget * 0.4f, 1.5f, 1.5f); // speedsearch
         Math_ScaledStepToS(&this->yaw, yawTarget, temp3 * 0.1f);
     }
 }
-
+// seems related to back walking somehow
 void func_80841138(Player* this, PlayState* play) {
     f32 temp1;
     f32 temp2;
@@ -7776,7 +7778,7 @@ void func_8084140C(Player* this, PlayState* play) {
     Player_SetupAction(play, this, Player_Action_8084170C, 1);
     Player_AnimChangeOnceMorph(play, this, &gPlayerAnim_link_normal_back_brake);
 }
-
+// speedsearch
 s32 func_80841458(Player* this, f32* arg1, s16* arg2, PlayState* play) {
     if (this->speedXZ > 6.0f) {
         func_8084140C(this, play);
@@ -7825,7 +7827,7 @@ void Player_Action_808414F8(Player* this, PlayState* play) {
         } else {
             sp2A = yawTarget - this->yaw;
 
-            Math_AsymStepToF(&this->speedXZ, speedTarget * 1.5f, 1.5f, 2.0f);
+            Math_AsymStepToF(&this->speedXZ, speedTarget * 1.5f, 1.5f, 2.0f); // speedsearch
             Math_ScaledStepToS(&this->yaw, yawTarget, sp2A * 0.1f);
 
             if ((speedTarget == 0.0f) && (this->speedXZ == 0.0f)) {
@@ -7851,7 +7853,7 @@ void Player_Action_8084170C(Player* this, PlayState* play) {
     if (!Player_TryActionChangeList(play, this, sActionChangeList4, true)) {
         Player_GetMovementSpeedAndYaw(this, &speedTarget, &yawTarget, SPEED_MODE_LINEAR, play);
 
-        if (this->speedXZ == 0.0f) {
+        if (this->speedXZ == 0.0f) { // speedsearch
             this->yaw = this->actor.shape.rot.y;
 
             if (func_8083FD78(this, &speedTarget, &yawTarget, play) > 0) {
@@ -7874,7 +7876,7 @@ void Player_Action_808417FC(Player* this, PlayState* play) {
         }
     }
 }
-
+// side
 void func_80841860(PlayState* play, Player* this) {
     f32 frame;
     LinkAnimationHeader* sp38 = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walkL, this->modelAnimType);
@@ -7896,7 +7898,7 @@ void Player_Action_8084193C(Player* this, PlayState* play) {
     s32 temp3;
 
     func_80841860(play, this);
-
+// speedsearch
     if (!Player_TryActionChangeList(play, this, sActionChangeList5, true)) {
         if (!func_80833C04(this)) {
             func_8083C858(this, play);
@@ -8049,7 +8051,7 @@ void func_80841EE4(Player* this, PlayState* play) {
 
         temp1 = this->unk_864;
     } else {
-        temp2 = this->speedXZ - (REG(48) / 100.0f);
+        temp2 = this->speedXZ - (REG(48) / 100.0f); // speedsearch
 
         if (temp2 < 0.0f) {
             temp1 = 1.0f;
@@ -8075,7 +8077,7 @@ void func_80841EE4(Player* this, PlayState* play) {
         LinkAnimation_InterpJointMorph(play, &this->skelAnime, 1.0f - temp1);
     }
 }
-
+// speedsearch
 void Player_Action_80842180(Player* this, PlayState* play) {
     f32 speedTarget;
     s16 yawTarget;

@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "gameplay_keep.h": "c",
+        "object_link_boy.h": "c",
+        "chrono": "c",
+        "random": "c",
+        "limits": "c",
+        "*.tcc": "c",
+        "optional": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "regex": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c"
+    }
+}

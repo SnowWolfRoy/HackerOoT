@@ -992,7 +992,7 @@ f32 Player_GetHeight(Player* player) {
         return offset + 44.0f;
     }
 }
-
+// this function seems to be changing the camera when running somehow ?
 f32 func_8002DCE4(Player* player) {
     if (player->stateFlags1 & PLAYER_STATE1_23) {
         return 8.0f;

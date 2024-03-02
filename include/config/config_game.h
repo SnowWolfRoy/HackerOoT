@@ -68,13 +68,13 @@
  * Widescreen mode
  * Note: pre-rendered scenes with the fixed camera mode won't re-scale properly
 */
-#define ENABLE_WIDESCREEN
+// #define ENABLE_WIDESCREEN
 
 // Force widescreen mode regardless of SaveContext
 // #define FORCE_WIDESCREEN
 
 // Increase the size of small elements (improves readability on N64)
-#define WIDESCREEN_N64_MODE true
+#define WIDESCREEN_N64_MODE false
 
 /**
  * Automatic GI Object Allocation
@@ -87,7 +87,7 @@
 /**
  * Skips the N64 logo and boots directly into the game if defined (may already be skipped by the options below)
  */
-// #define SKIP_N64_BOOT_LOGO
+#define SKIP_N64_BOOT_LOGO
 
 /**
  * Use Majora's Masks' N64 Logo logic

@@ -760,16 +760,22 @@ static GetItemEntry sGetItemTable[] = {
     GET_ITEM_NONE,
 };
 
-#define GET_PLAYER_ANIM(group, type) D_80853914[group * PLAYER_ANIMTYPE_MAX + type]
+#define GET_PLAYER_ANIM(group, type) D_80853914[group * PLAYER_ANIMTYPE_MAX + type] // add "+ gSaveContext.save.linkAge" to the end
 
 static LinkAnimationHeader* D_80853914[PLAYER_ANIMGROUP_MAX * PLAYER_ANIMTYPE_MAX] = {
     /* PLAYER_ANIMGROUP_wait */
     &gPlayerAnim_link_normal_wait_free,
+    //&gPlayerAnim_wolf_normal_temp,
     &gPlayerAnim_link_normal_wait,
+    //&gPlayerAnim_wolf_normal_temp,
     &gPlayerAnim_link_normal_wait,
+    //&gPlayerAnim_wolf_normal_temp,
     &gPlayerAnim_link_fighter_wait_long,
+    //&gPlayerAnim_wolf_normal_temp,
     &gPlayerAnim_link_normal_wait_free,
+    //&gPlayerAnim_wolf_normal_temp,
     &gPlayerAnim_link_normal_wait_free,
+    //&gPlayerAnim_wolf_normal_temp,
     /* PLAYER_ANIMGROUP_walk */
     &gPlayerAnim_link_normal_walk_free,
     &gPlayerAnim_link_normal_walk,
@@ -3621,6 +3627,7 @@ s32 Player_CalcSpeedAndYawFromControlStick(PlayState* play, Player* this, f32* o
             // set 0.14f for 6.0 speed. set 0.23f for 10.0 speed (roughly)
             *outSpeedTarget = (*outSpeedTarget * 0.23f) - (8.0f * floorPitchInfluence * floorPitchInfluence); // global capping movement speed at 6 for 0.14f, reduces further for slope
             *outSpeedTarget = CLAMP(*outSpeedTarget, 0.0f, speedCap); // speed capping based on Boot speed
+           // gSaveContext.save.info.playerData.rupees = *outSpeedTarget; // Probably integer only? 
 
             return true;
         }
@@ -5768,7 +5775,7 @@ s32 func_8083BC7C(Player* this, PlayState* play) {
 
     return 0;
 }
-// seems to be setting jump slash movement properties
+// jumping properties
 void func_8083BCD0(Player* this, PlayState* play, s32 arg2) {
     func_80838940(this, D_80853D4C[arg2][0], !(arg2 & 1) ? 5.8f : 3.5f, play, NA_SE_VO_LI_SWORD_N);
 

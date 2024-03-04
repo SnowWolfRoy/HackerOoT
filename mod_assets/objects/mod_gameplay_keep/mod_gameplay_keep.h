@@ -1,0 +1,1 @@
+extern LinkAnimationHeader gPlayerAnim_wolf_normal_temp;

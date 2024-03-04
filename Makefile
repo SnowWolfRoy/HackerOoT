@@ -198,8 +198,11 @@ build/src/overlays/actors/ovl_Item_B_Heart/%.o: OPTFLAGS := -O0
 build/src/overlays/actors/ovl_Bg_Mori_Hineri/%.o: OPTFLAGS := -O0
 
 #### Main Targets ###
-
-all: $(ROM)
+all:
+	python3 install_mod_assets.py
+	$(MAKE) build
+	
+build: $(ROM)
 	cp  $(ROM) /mnt/c/Users/Roy/Desktop/oot-modding
 
 compress: $(ROMC)

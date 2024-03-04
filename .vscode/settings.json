@@ -15,6 +15,9 @@
         "tuple": "c",
         "type_traits": "c",
         "utility": "c",
-        "compare": "c"
+        "compare": "c",
+        "link_animetion.h": "c",
+        "wolf_animetion.h": "c",
+        "object_link_child.h": "c"
     }
 }

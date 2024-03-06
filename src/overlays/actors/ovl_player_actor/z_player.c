@@ -7626,8 +7626,9 @@ s32 func_8084021C(f32 arg0, f32 arg1, f32 arg2, f32 arg3) {
 
     return 0;
 }
+
 // sets loop point for walking, side walk, back walk, and running
-void func_8084029C(Player* this, f32 arg1) {
+void func_8084029C(Player* this, f32 arg1, s16 frameCount) {
     f32 updateScale = R_UPDATE_RATE * 0.5f;
 
     arg1 *= updateScale;
@@ -7652,9 +7653,9 @@ void func_8084029C(Player* this, f32 arg1) {
     this->unk_868 += arg1;
 
     if (this->unk_868 < 0.0f) {
-        this->unk_868 += 29.0f;
-    } else if (this->unk_868 >= 29.0f) {
-        this->unk_868 -= 29.0f;
+        this->unk_868 += frameCount;
+    } else if (this->unk_868 >= frameCount) {
+        this->unk_868 -= frameCount;
     }
 }
 
@@ -7713,7 +7714,8 @@ void Player_Action_80840450(Player* this, PlayState* play) {
             return;
         }
 
-        func_8084029C(this, (this->speedXZ * 0.3f) + 1.0f); // speedsearch
+        s16 frameCount = 29; // TODO: What's the appropriate value to use?
+        func_8084029C(this, (this->speedXZ * 0.3f) + 1.0f, frameCount); // speedsearch
         func_80840138(this, speedTarget, yawTarget);
 
         temp2 = this->unk_868;
@@ -8009,11 +8011,19 @@ void func_80841138(Player* this, PlayState* play) {
     f32 temp1;
     f32 temp2;
 
+    LinkAnimationHeader* backWalkAnim;
+    LinkAnimationHeader* backRunAnim;
+    s16 backWalkFCount;
+    s16 backRunFCount;
+    f32 fcountRatio;
+
+    backWalkAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_back_walk, this->modelAnimType);
+    backWalkFCount = Animation_GetLastFrame(backWalkAnim);
+
     if (this->unk_864 < 1.0f) {
         temp1 = R_UPDATE_RATE * 0.5f;
-        func_8084029C(this, REG(35) / 1000.0f);
-        LinkAnimation_LoadToJoint(play, &this->skelAnime,
-                                  GET_PLAYER_ANIM(PLAYER_ANIMGROUP_back_walk, this->modelAnimType), this->unk_868);
+        func_8084029C(this, REG(35) / 1000.0f, backWalkFCount);
+        LinkAnimation_LoadToJoint(play, &this->skelAnime, backWalkAnim, this->unk_868);
         this->unk_864 += 1 * temp1;
         if (this->unk_864 >= 1.0f) {
             this->unk_864 = 1.0f;
@@ -8023,21 +8033,22 @@ void func_80841138(Player* this, PlayState* play) {
         temp2 = this->speedXZ - (REG(48) / 100.0f);
         if (temp2 < 0.0f) {
             temp1 = 1.0f;
-            func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ));
-            LinkAnimation_LoadToJoint(play, &this->skelAnime,
-                                      GET_PLAYER_ANIM(PLAYER_ANIMGROUP_back_walk, this->modelAnimType), this->unk_868);
+            func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ), backWalkFCount);
+            LinkAnimation_LoadToJoint(play, &this->skelAnime, backWalkAnim, this->unk_868);
         } else {
+            backRunAnim = &gPlayerAnim_link_normal_back_run;
+            backRunFCount = Animation_GetLastFrame(backRunAnim);
+            fcountRatio = ((f32)backRunFCount / (f32)backWalkFCount);
+
             temp1 = (REG(37) / 1000.0f) * temp2;
             if (temp1 < 1.0f) {
-                func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ));
+                func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ), backWalkFCount);
             } else {
                 temp1 = 1.0f;
-                func_8084029C(this, 1.2f + ((REG(38) / 1000.0f) * temp2));
+                func_8084029C(this, 1.2f + ((REG(38) / 1000.0f) * temp2), backWalkFCount);
             }
-            LinkAnimation_LoadToMorph(play, &this->skelAnime,
-                                      GET_PLAYER_ANIM(PLAYER_ANIMGROUP_back_walk, this->modelAnimType), this->unk_868);
-            LinkAnimation_LoadToJoint(play, &this->skelAnime, &gPlayerAnim_link_normal_back_run,
-                                      this->unk_868 * (16.0f / 29.0f));
+            LinkAnimation_LoadToMorph(play, &this->skelAnime, backWalkAnim, this->unk_868);
+            LinkAnimation_LoadToJoint(play, &this->skelAnime, backRunAnim, this->unk_868 * fcountRatio);
         }
     }
 
@@ -8151,15 +8162,30 @@ void Player_Action_808417FC(Player* this, PlayState* play) {
 // side
 void func_80841860(PlayState* play, Player* this) {
     f32 frame;
-    LinkAnimationHeader* sp38 = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walkL, this->modelAnimType);
-    LinkAnimationHeader* sp34 = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walkR, this->modelAnimType);
 
-    this->skelAnime.animation = sp38;
+    LinkAnimationHeader* sideWalkAnim;
+    LinkAnimationHeader* sideWalkLAnim;
+    LinkAnimationHeader* sideWalkRAnim;
+    s16 sideWalkFCount;
+    s16 sideWalkLFCount;
+    s16 sideWalkRFCount;
+    f32 fcountRatio;
 
-    func_8084029C(this, (REG(30) / 1000.0f) + ((REG(32) / 1000.0f) * this->speedXZ));
+    sideWalkAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walk, this->modelAnimType);
+    sideWalkLAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walkL, this->modelAnimType);
+    sideWalkRAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_side_walkR, this->modelAnimType);
+    sideWalkFCount = Animation_GetLastFrame(sideWalkAnim);
+    sideWalkLFCount = Animation_GetLastFrame(sideWalkLAnim);
+    sideWalkRFCount = Animation_GetLastFrame(sideWalkRAnim);
+    fcountRatio = ((f32)sideWalkLFCount / (f32)sideWalkFCount);
+    ASSERT(sideWalkLFCount == sideWalkRFCount, "sideWalkLFCount == sideWalkRFCount", __BASE_FILE__, __LINE__);
 
-    frame = this->unk_868 * (16.0f / 29.0f);
-    LinkAnimation_BlendToJoint(play, &this->skelAnime, sp34, frame, sp38, frame, this->unk_870, this->blendTable);
+    this->skelAnime.animation = sideWalkLAnim;
+
+    func_8084029C(this, (REG(30) / 1000.0f) + ((REG(32) / 1000.0f) * this->speedXZ), sideWalkFCount);
+
+    frame = this->unk_868 * fcountRatio;
+    LinkAnimation_BlendToJoint(play, &this->skelAnime, sideWalkRAnim, frame, sideWalkLAnim, frame, this->unk_870, this->blendTable);
 }
 
 void Player_Action_8084193C(Player* this, PlayState* play) {
@@ -8309,12 +8335,20 @@ void func_80841EE4(Player* this, PlayState* play) {
     f32 temp1;
     f32 temp2;
 
+    LinkAnimationHeader* walkAnim;
+    LinkAnimationHeader* runAnim;
+    s16 walkFCount;
+    s16 runFCount;
+    f32 fcountRatio;
+
+    walkAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_walk, this->modelAnimType);
+    walkFCount = Animation_GetLastFrame(walkAnim);
+
     if (this->unk_864 < 1.0f) {
         temp1 = R_UPDATE_RATE * 0.5f;
 
-        func_8084029C(this, REG(35) / 1000.0f);
-        LinkAnimation_LoadToJoint(play, &this->skelAnime, GET_PLAYER_ANIM(PLAYER_ANIMGROUP_walk, this->modelAnimType),
-                                  this->unk_868);
+        func_8084029C(this, REG(35) / 1000.0f, walkFCount);
+        LinkAnimation_LoadToJoint(play, &this->skelAnime, walkAnim, this->unk_868);
 
         this->unk_864 += 1 * temp1;
         if (this->unk_864 >= 1.0f) {
@@ -8325,23 +8359,27 @@ void func_80841EE4(Player* this, PlayState* play) {
     } else {
         temp2 = this->speedXZ - (REG(48) / 100.0f); // speedsearch
 
+        runAnim = GET_PLAYER_ANIM(PLAYER_ANIMGROUP_run, this->modelAnimType);
+        runFCount = Animation_GetLastFrame(runAnim);
+        fcountRatio = ((f32)runFCount / (f32)walkFCount);
+
         if (temp2 < 0.0f) {
             temp1 = 1.0f;
-            func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ));
+            func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ), walkFCount);
 
             func_80841CC4(this, 0, play);
         } else {
             temp1 = (REG(37) / 1000.0f) * temp2;
             if (temp1 < 1.0f) {
-                func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ));
+                func_8084029C(this, (REG(35) / 1000.0f) + ((REG(36) / 1000.0f) * this->speedXZ), walkFCount);
             } else {
                 temp1 = 1.0f;
-                func_8084029C(this, 1.2f + ((REG(38) / 1000.0f) * temp2));
+                func_8084029C(this, 1.2f + ((REG(38) / 1000.0f) * temp2), walkFCount);
             }
 
             func_80841CC4(this, 1, play);
 
-            LinkAnimation_LoadToJoint(play, &this->skelAnime, func_80833438(this), this->unk_868 * (20.0f / 29.0f));
+            LinkAnimation_LoadToJoint(play, &this->skelAnime, func_80833438(this), this->unk_868 * fcountRatio);
         }
     }
 
@@ -9443,6 +9481,12 @@ void Player_Action_80845000(Player* this, PlayState* play) {
     s16 temp5;
     s32 sp44;
 
+    s16 frameCount;
+    LinkAnimationHeader* kiruWaitAnim;
+    LinkAnimationHeader* kiruWalkAnim;
+    s16 kiruWalkFCount;
+    f32 fcountRatio;
+
     temp1 = this->yaw - this->actor.shape.rot.y;
     temp2 = ABS(temp1);
 
@@ -9457,13 +9501,17 @@ void Player_Action_80845000(Player* this, PlayState* play) {
 
     sp58 = ((temp2 < 0x4000) ? -1.0f : 1.0f) * sp58;
 
-    func_8084029C(this, sp58);
+    frameCount = 29; // TODO: What's the appropriate value to use here?
+    func_8084029C(this, sp58, frameCount);
 
     sp58 = CLAMP(sp5C * 0.5f, 0.5f, 1.0f);
 
-    LinkAnimation_BlendToJoint(play, &this->skelAnime, D_80854360[Player_HoldsTwoHandedWeapon(this)], 0.0f,
-                               D_80854370[Player_HoldsTwoHandedWeapon(this)], this->unk_868 * (21.0f / 29.0f), sp58,
-                               this->blendTable);
+    kiruWaitAnim = D_80854360[Player_HoldsTwoHandedWeapon(this)];
+    kiruWalkAnim = D_80854370[Player_HoldsTwoHandedWeapon(this)];
+    kiruWalkFCount = Animation_GetLastFrame(kiruWalkAnim);
+    fcountRatio = ((f32)kiruWalkFCount / (f32)frameCount);
+
+    LinkAnimation_BlendToJoint(play, &this->skelAnime, kiruWaitAnim, 0.0f, kiruWalkAnim, this->unk_868 * fcountRatio, sp58, this->blendTable);
 
     if (!func_80842964(this, play) && !func_80844BE4(this, play)) {
         func_80844E3C(this);
@@ -9509,29 +9557,39 @@ void Player_Action_80845308(Player* this, PlayState* play) {
     s16 temp5;
     s32 sp44;
 
+    s16 frameCount;
+    LinkAnimationHeader* kiruWaitAnim;
+    LinkAnimationHeader* kiruSideWalkAnim;
+    s16 kiruSideWalkFCount;
+    f32 fcountRatio;
+
     sp5C = fabsf(this->speedXZ);
 
     this->stateFlags1 |= PLAYER_STATE1_12;
 
+    frameCount = 29; // TODO: What's the appropriate value to use here?
     if (sp5C == 0.0f) {
         sp5C = ABS(this->unk_87C) * 0.0015f;
         if (sp5C < 400.0f) {
             sp5C = 0.0f;
         }
-        func_8084029C(this, ((this->unk_87C >= 0) ? 1 : -1) * sp5C);
+        func_8084029C(this, ((this->unk_87C >= 0) ? 1 : -1) * sp5C, frameCount);
     } else {
         sp58 = sp5C * 1.5f;
         if (sp58 < 1.5f) {
             sp58 = 1.5f;
         }
-        func_8084029C(this, sp58);
+        func_8084029C(this, sp58, frameCount);
     }
 
     sp58 = CLAMP(sp5C * 0.5f, 0.5f, 1.0f);
 
-    LinkAnimation_BlendToJoint(play, &this->skelAnime, D_80854360[Player_HoldsTwoHandedWeapon(this)], 0.0f,
-                               D_80854378[Player_HoldsTwoHandedWeapon(this)], this->unk_868 * (21.0f / 29.0f), sp58,
-                               this->blendTable);
+    kiruWaitAnim = D_80854360[Player_HoldsTwoHandedWeapon(this)];
+    kiruSideWalkAnim = D_80854378[Player_HoldsTwoHandedWeapon(this)];
+    kiruSideWalkFCount = Animation_GetLastFrame(kiruSideWalkAnim);
+    fcountRatio = ((f32)kiruSideWalkFCount / (f32)frameCount);
+
+    LinkAnimation_BlendToJoint(play, &this->skelAnime, kiruWaitAnim, 0.0f, kiruSideWalkAnim, this->unk_868 * fcountRatio, sp58, this->blendTable);
 
     if (!func_80842964(this, play) && !func_80844BE4(this, play)) {
         func_80844E3C(this);

@@ -5,5 +5,9 @@
 #include "assets/misc/wolf_animetion/wolf_animetion.h"
 
 LinkAnimationHeader gPlayerAnim_wolf_normal_temp = {
-	{ 20 }, gPlayerAnim_wolf_normal_tempData 
+	{ 90 }, gPlayerAnim_wolf_normal_tempData 
+};
+
+LinkAnimationHeader gPlayeranim_wolf_normal_walk = {
+	{ 55 }, gPlayeranim_wolf_normal_walkData
 };

@@ -779,43 +779,43 @@ static LinkAnimationHeader* D_80853914[PLAYER_ANIMGROUP_MAX * PLAYER_ANIMTYPE_MA
     &gPlayerAnim_wolf_normal_temp,
     /* PLAYER_ANIMGROUP_walk */
     &gPlayerAnim_link_normal_walk_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_walk,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_walk,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_fighter_walk_long,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_walk_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_walk_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     /* PLAYER_ANIMGROUP_run */
     &gPlayerAnim_link_normal_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_fighter_run,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_run,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_fighter_run_long,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     /* PLAYER_ANIMGROUP_damage_run */
     &gPlayerAnim_link_normal_damage_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_fighter_damage_run,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_damage_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_fighter_damage_run_long,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_damage_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     &gPlayerAnim_link_normal_damage_run_free,
-    &gPlayerAnim_wolf_normal_temp,
+    &gPlayeranim_wolf_normal_walk,
     /* PLAYER_ANIMGROUP_heavy_run */
     &gPlayerAnim_link_normal_heavy_run_free,
     &gPlayerAnim_wolf_normal_temp,
@@ -1681,12 +1681,24 @@ static ItemChangeInfo sItemChangeInfo[PLAYER_ITEM_CHG_MAX] = {
 static s8 sItemChangeTypes[PLAYER_ANIMTYPE_MAX][PLAYER_ANIMTYPE_MAX] = {
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
       PLAYER_ITEM_CHG_11 },
+    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
+      PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_5, PLAYER_ITEM_CHG_0, -PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_4, PLAYER_ITEM_CHG_5,
+      PLAYER_ITEM_CHG_9 },
+    { PLAYER_ITEM_CHG_5, PLAYER_ITEM_CHG_0, -PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_4, PLAYER_ITEM_CHG_5,
+      PLAYER_ITEM_CHG_9 },
+    { PLAYER_ITEM_CHG_3, PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_0, PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_3,
       PLAYER_ITEM_CHG_9 },
     { PLAYER_ITEM_CHG_3, PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_0, PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_3,
       PLAYER_ITEM_CHG_9 },
     { PLAYER_ITEM_CHG_6, -PLAYER_ITEM_CHG_4, -PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_7, PLAYER_ITEM_CHG_6,
       PLAYER_ITEM_CHG_10 },
+    { PLAYER_ITEM_CHG_6, -PLAYER_ITEM_CHG_4, -PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_7, PLAYER_ITEM_CHG_6,
+      PLAYER_ITEM_CHG_10 },
+    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
+      PLAYER_ITEM_CHG_11 },
+    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
+      PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
       PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
@@ -6090,7 +6102,7 @@ s32 Player_ActionChange_10(Player* this, PlayState* play) {
 
     return 0;
 }
-
+// determines wwhich animation to play when link stops walking b ased on the foot he's on, using frame count
 void func_8083BF50(Player* this, PlayState* play) {
     LinkAnimationHeader* anim;
     f32 sp30;
@@ -7626,7 +7638,7 @@ s32 func_8084021C(f32 arg0, f32 arg1, f32 arg2, f32 arg3) {
 
     return 0;
 }
-
+// sets loop point for walking, side walk, back walk, and running
 void func_8084029C(Player* this, f32 arg1) {
     f32 updateScale = R_UPDATE_RATE * 0.5f;
 
@@ -8349,7 +8361,7 @@ void func_80841EE4(Player* this, PlayState* play) {
         LinkAnimation_InterpJointMorph(play, &this->skelAnime, 1.0f - temp1);
     }
 }
-// speedsearch
+// speedsearch Walking Action
 void Player_Action_80842180(Player* this, PlayState* play) {
     f32 speedTarget;
     s16 yawTarget;

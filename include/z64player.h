@@ -163,7 +163,7 @@ typedef enum {
     /* 0x13 */ PLAYER_LIMB_R_HAND,
     /* 0x14 */ PLAYER_LIMB_SHEATH,
     /* 0x15 */ PLAYER_LIMB_TORSO,
-    /* 0x16 */ PLAYER_LIMB_MAX
+    /* 0x16 */ PLAYER_LIMB_MAX = 0x1C
 } PlayerLimb;
 
 typedef enum {

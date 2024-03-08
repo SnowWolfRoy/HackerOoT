@@ -1064,7 +1064,10 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
         //       an out-of-bounds write to `bodyPartsPos` would occur.
         sCurBodyPartPos = &this->bodyPartsPos[-1];
 
-        if (!LINK_IS_ADULT) {
+        // NOTE: The reason this was changed to `if (0)` from `if (!LINK_IS_ADULT)` is, because
+        // we no longer share animations between Adult Link and Child (Wolf) Link, we no longer
+        // need to offset the animations to be shorter for child link.
+        if (0 /*!LINK_IS_ADULT*/) {
             if (!(this->skelAnime.moveFlags & ANIM_FLAG_PLAYER_2) || (this->skelAnime.moveFlags & ANIM_FLAG_0)) {
                 pos->x *= 0.64f;
                 pos->z *= 0.64f;
@@ -1125,11 +1128,13 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
                                            void* thisx) {
     Player* this = (Player*)thisx;
 
-    if (!LINK_IS_ADULT) {
-        return false;
-    }
-
     if (!Player_OverrideLimbDrawGameplayCommon(play, limbIndex, dList, pos, rot, thisx)) {
+        // NOTE: The reason we added a check to return early if `!LINK_IS_ADULT` is because
+        // we want to stop swapping dLists (temporarily, perhaps) for Child (Wolf) Link
+        // until we figure out how Wolf Link should use/hold items and weapons.
+        if (!LINK_IS_ADULT) {
+            return false;
+        }
         if (limbIndex == PLAYER_LIMB_L_HAND) {
             Gfx** dLists = this->leftHandDLists;
 

@@ -2151,4 +2151,65 @@ void Math3D_DrawSphere(PlayState* play, Sphere16* sph) {
 }
 
 void Math3D_DrawCylinder(PlayState* play, Cylinder16* cyl) {
+    // Draws a diamond inside of the cylinder.
+    /*
+    A
+           x+0
+           y+h
+           z+r
+            *
+           / \
+          / 2 \
+         /     \
+    x-r * 1   3 * x+r
+    y+h |\     /| y+h
+    z+0 | \ 4 / | z+0
+        |  \ /  |
+        |   *   |
+        |  x+0  |
+        |  y+h  |
+        |  y-r  |
+
+    B
+        |  x+0  |
+        |  y+0  |
+        |  z+r  |
+        |  (*)  |
+        |   2   |
+        |       |
+    x-r * 1   3 * x+r
+    y+0  \     /  y+0
+    z+0   \ 4 /   z+0
+           \ /
+            *
+           x+0
+           y+0
+           z-r
+    */
+
+    Vec3f a1 = { x: cyl->pos.x - cyl->radius, y: cyl->yShift + cyl->pos.y + cyl->height, z: cyl->pos.z               };
+    Vec3f a2 = { x: cyl->pos.x              , y: cyl->yShift + cyl->pos.y + cyl->height, z: cyl->pos.z + cyl->radius };
+    Vec3f a3 = { x: cyl->pos.x + cyl->radius, y: cyl->yShift + cyl->pos.y + cyl->height, z: cyl->pos.z               };
+    Vec3f a4 = { x: cyl->pos.x              , y: cyl->yShift + cyl->pos.y + cyl->height, z: cyl->pos.z - cyl->radius };
+
+    Vec3f b1 = { x: cyl->pos.x - cyl->radius, y: cyl->yShift + cyl->pos.y              , z: cyl->pos.z               };
+    Vec3f b2 = { x: cyl->pos.x              , y: cyl->yShift + cyl->pos.y              , z: cyl->pos.z + cyl->radius };
+    Vec3f b3 = { x: cyl->pos.x + cyl->radius, y: cyl->yShift + cyl->pos.y              , z: cyl->pos.z               };
+    Vec3f b4 = { x: cyl->pos.x              , y: cyl->yShift + cyl->pos.y              , z: cyl->pos.z - cyl->radius };
+
+    Collider_DrawRedPoly(play->state.gfxCtx, &a1, &b1, &b2);
+    Collider_DrawRedPoly(play->state.gfxCtx, &a1, &b2, &a2);
+
+    Collider_DrawRedPoly(play->state.gfxCtx, &a2, &b2, &b3);
+    Collider_DrawRedPoly(play->state.gfxCtx, &a2, &b3, &a3);
+
+    Collider_DrawRedPoly(play->state.gfxCtx, &a3, &b3, &b4);
+    Collider_DrawRedPoly(play->state.gfxCtx, &a3, &b4, &a4);
+
+    Collider_DrawRedPoly(play->state.gfxCtx, &a4, &b4, &b1);
+    Collider_DrawRedPoly(play->state.gfxCtx, &a4, &b1, &a1);
+
+    // R + Left
+    // 15:    1
+    // 21-23: 1
 }

@@ -66,7 +66,7 @@
 // #define ENABLE_EVENT_EDITOR
 
 /**** [REGISTERS EDITOR] ****/
-// #define ENABLE_REG_EDITOR
+#define ENABLE_REG_EDITOR
 
 // -------------------------------------------
 

@@ -426,8 +426,8 @@ static PlayerAgeProperties sAgeProperties[] = {
     },
     {
         40.0f,                   // ceilingCheckHeight
-        60.0f,                   // unk_04
-        11.0f / 17.0f,           // unk_08
+        60.0f,                   // unk_04 foot size (used for shadow)
+        11.0f / 17.0f,           // unk_08 ledge reach and seems to influence height after climbing
         71.0f,                   // unk_0C
         50.0f,                   // unk_10
         47.0f,                   // unk_14
@@ -439,7 +439,7 @@ static PlayerAgeProperties sAgeProperties[] = {
         32.0f,                   // unk_2C
         48.0f,                   // unk_30
         70.0f * (11.0f / 17.0f), // unk_34
-        14.0f,                   // wallCheckRadius
+        28.0f,                   // wallCheckRadius, does not affect collision with actors. see 'WolfHurtBox'
         12.0f,                   // unk_3C
         55.0f,                   // unk_40
         { -24, 3565, 876 },      // unk_44
@@ -10052,7 +10052,7 @@ void Player_Action_80846578(Player* this, PlayState* play) {
     }
 }
 
-static ColliderCylinderInit D_80854624 = {
+static ColliderCylinderInit AdultHurtBox = {
     {
         COLTYPE_HIT5,
         AT_NONE,
@@ -10070,6 +10070,26 @@ static ColliderCylinderInit D_80854624 = {
         OCELEM_ON,
     },
     { 12, 60, 0, { 0, 0, 0 } },
+};
+
+static ColliderCylinderInit WolfHurtBox = {
+    {
+        COLTYPE_HIT5,
+        AT_NONE,
+        AC_ON | AC_TYPE_ENEMY,
+        OC1_ON | OC1_TYPE_ALL,
+        OC2_TYPE_PLAYER,
+        COLSHAPE_CYLINDER,
+    },
+    {
+        ELEMTYPE_UNK1,
+        { 0x00000000, 0x00, 0x00 },
+        { 0xFFCFFFFF, 0x00, 0x00 },
+        TOUCH_NONE,
+        BUMP_ON,
+        OCELEM_ON,
+    },
+    { 24, 30, 0, { 0, 0, 0 } },
 };
 
 static ColliderQuadInit D_80854650 = {
@@ -10237,7 +10257,7 @@ void Player_InitCommon(Player* this, PlayState* play, FlexSkeletonHeader* skelHe
     this->subCamId = CAM_ID_NONE;
 
     Collider_InitCylinder(play, &this->cylinder);
-    Collider_SetCylinder(play, &this->cylinder, &this->actor, &D_80854624);
+    Collider_SetCylinder(play, &this->cylinder, &this->actor, LINK_IS_ADULT ? &AdultHurtBox : &WolfHurtBox);
     Collider_InitQuad(play, &this->meleeWeaponQuads[0]);
     Collider_SetQuad(play, &this->meleeWeaponQuads[0], &this->actor, &D_80854650);
     Collider_InitQuad(play, &this->meleeWeaponQuads[1]);

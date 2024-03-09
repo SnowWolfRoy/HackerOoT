@@ -761,7 +761,7 @@ static GetItemEntry sGetItemTable[] = {
     GET_ITEM_NONE,
 };
 
-#define GET_PLAYER_ANIM(group, type) D_80853914[group * PLAYER_ANIMTYPE_MAX + type + gSaveContext.save.linkAge] // add "+ gSaveContext.save.linkAge" to the end
+#define GET_PLAYER_ANIM(group, type) D_80853914[group * PLAYER_ANIMTYPE_MAX + type + gSaveContext.save.linkAge]
 
 static LinkAnimationHeader* D_80853914[PLAYER_ANIMGROUP_MAX * PLAYER_ANIMTYPE_MAX] = {
     /* PLAYER_ANIMGROUP_wait */
@@ -1362,7 +1362,10 @@ static LinkAnimationHeader* D_80853D4C[][3] = {
       &gPlayerAnim_link_fighter_Rside_jump_endR },
 };
 
-static LinkAnimationHeader* D_80853D7C[][2] = {
+#define GET_PLAYER_IDLE_ANIM(unk, type) (LINK_IS_ADULT ? sAdultLinkIdleAnimations : sWolfLinkIdleAnimations)[unk][type]
+#define PLAYER_IDLE_ANIM_MAX (s32)(sizeof(sAdultLinkIdleAnimations) / sizeof(sAdultLinkIdleAnimations[0][0]))
+
+static LinkAnimationHeader* sAdultLinkIdleAnimations[][2] = {
     { &gPlayerAnim_link_normal_wait_typeA_20f, &gPlayerAnim_link_normal_waitF_typeA_20f },
     { &gPlayerAnim_link_normal_wait_typeC_20f, &gPlayerAnim_link_normal_waitF_typeC_20f },
     { &gPlayerAnim_link_normal_wait_typeB_20f, &gPlayerAnim_link_normal_waitF_typeB_20f },
@@ -1378,6 +1381,26 @@ static LinkAnimationHeader* D_80853D7C[][2] = {
     { &gPlayerAnim_link_wait_itemC_20f, &gPlayerAnim_link_wait_itemC_20f },
     { &gPlayerAnim_link_wait_itemD2_20f, &gPlayerAnim_link_wait_itemD2_20f }
 };
+static LinkAnimationHeader* sWolfLinkIdleAnimations[][2] = {
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp },
+    { &gPlayerAnim_wolf_normal_temp, &gPlayerAnim_wolf_normal_temp }
+};
+_Static_assert(
+    sizeof(sAdultLinkIdleAnimations) == sizeof(sWolfLinkIdleAnimations),
+    "Number of idle animations in must be the same for both Adult and Wolf link."
+);
 
 static struct_80832924 D_80853DEC[] = {
     { NA_SE_VO_LI_SNEEZE, -0x2008 },
@@ -1676,29 +1699,19 @@ static ItemChangeInfo sItemChangeInfo[PLAYER_ITEM_CHG_MAX] = {
     /* PLAYER_ITEM_CHG_13 */ { &gPlayerAnim_link_normal_free2freeB, 13 },
 };
 
+#define GET_ITEM_CHANGE_TYPE(cur, next) sItemChangeTypes[(cur) / 2][(next) / 2]
+
 // Maps the appropriate ItemChangeType based on current and next animtype.
 // A negative type value means the corresponding animation should be played in reverse.
-static s8 sItemChangeTypes[PLAYER_ANIMTYPE_MAX][PLAYER_MODELGROUPENTRY_MAX] = {
-    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
-      PLAYER_ITEM_CHG_11 },
+static s8 sItemChangeTypes[PLAYER_ANIMTYPE_MAX / 2][PLAYER_ANIMTYPE_MAX / 2] = {
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
       PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_5, PLAYER_ITEM_CHG_0, -PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_4, PLAYER_ITEM_CHG_5,
-      PLAYER_ITEM_CHG_9 },
-    { PLAYER_ITEM_CHG_5, PLAYER_ITEM_CHG_0, -PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_4, PLAYER_ITEM_CHG_5,
-      PLAYER_ITEM_CHG_9 },
-    { PLAYER_ITEM_CHG_3, PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_0, PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_3,
       PLAYER_ITEM_CHG_9 },
     { PLAYER_ITEM_CHG_3, PLAYER_ITEM_CHG_1, PLAYER_ITEM_CHG_0, PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_3,
       PLAYER_ITEM_CHG_9 },
     { PLAYER_ITEM_CHG_6, -PLAYER_ITEM_CHG_4, -PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_7, PLAYER_ITEM_CHG_6,
       PLAYER_ITEM_CHG_10 },
-    { PLAYER_ITEM_CHG_6, -PLAYER_ITEM_CHG_4, -PLAYER_ITEM_CHG_2, PLAYER_ITEM_CHG_7, PLAYER_ITEM_CHG_6,
-      PLAYER_ITEM_CHG_10 },
-    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
-      PLAYER_ITEM_CHG_11 },
-    { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
-      PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
       PLAYER_ITEM_CHG_11 },
     { PLAYER_ITEM_CHG_8, -PLAYER_ITEM_CHG_5, -PLAYER_ITEM_CHG_3, -PLAYER_ITEM_CHG_6, PLAYER_ITEM_CHG_8,
@@ -2322,7 +2335,7 @@ s32 func_80833350(Player* this) {
     s32 i;
 
     if (func_80833338(this) != this->skelAnime.animation) {
-        for (i = 0, entry = &D_80853D7C[0][0]; i < 28; i++, entry++) {
+        for (i = 0, entry = &GET_PLAYER_IDLE_ANIM(0, 0); i < PLAYER_IDLE_ANIM_MAX; i++, entry++) {
             if (this->skelAnime.animation == *entry) {
                 return i + 1;
             }
@@ -2695,7 +2708,7 @@ void Player_StartChangingHeldItem(Player* this, PlayState* play) {
     Player_SetItemActionFunc(this, Player_IA_ChangeHeldItem);
 
     nextAnimType = gPlayerModelTypes[this->nextModelGroup][PLAYER_MODELGROUPENTRY_ANIM];
-    itemChangeType = sItemChangeTypes[gPlayerModelTypes[this->modelGroup][PLAYER_MODELGROUPENTRY_ANIM]][nextAnimType];
+    itemChangeType = GET_ITEM_CHANGE_TYPE(gPlayerModelTypes[this->modelGroup][PLAYER_MODELGROUPENTRY_ANIM], nextAnimType);
 
     if ((heldItemAction == PLAYER_IA_BOTTLE) || (heldItemAction == PLAYER_IA_BOOMERANG) ||
         ((heldItemAction == PLAYER_IA_NONE) &&
@@ -3544,8 +3557,7 @@ void Player_UseItem(PlayState* play, Player* this, s32 item) {
 
                 if ((this->heldItemAction >= 0) && (Player_ActionToMagicSpell(this, itemAction) < 0) &&
                     (item != this->heldItemId) &&
-                    (sItemChangeTypes[gPlayerModelTypes[this->modelGroup][PLAYER_MODELGROUPENTRY_ANIM]][nextAnimType] !=
-                     PLAYER_ITEM_CHG_0)) {
+                    (GET_ITEM_CHANGE_TYPE(gPlayerModelTypes[this->modelGroup][PLAYER_MODELGROUPENTRY_ANIM], nextAnimType) != PLAYER_ITEM_CHG_0)) {
                     // Start the held item change process
                     this->heldItemId = item;
                     this->stateFlags1 |= PLAYER_STATE1_START_CHANGING_HELD_ITEM;
@@ -7854,9 +7866,9 @@ void func_808409CC(PlayState* play, Player* this) {
                     }
                 }
             }
-            animPtr = &D_80853D7C[sp38][0];
+            animPtr = &GET_PLAYER_IDLE_ANIM(sp38, 0);
             if (this->modelAnimType != PLAYER_ANIMTYPE_1) {
-                animPtr = &D_80853D7C[sp38][1];
+                animPtr = &GET_PLAYER_IDLE_ANIM(sp38, 1);
             }
             anim = *animPtr;
         }

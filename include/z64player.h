@@ -140,31 +140,63 @@ typedef enum {
     /* 0x43 */ PLAYER_IA_MAX
 } PlayerItemAction;
 
-typedef enum {
-    /* 0x00 */ PLAYER_LIMB_NONE,
-    /* 0x01 */ PLAYER_LIMB_ROOT,
-    /* 0x02 */ PLAYER_LIMB_WAIST,
-    /* 0x03 */ PLAYER_LIMB_LOWER,
-    /* 0x04 */ PLAYER_LIMB_R_THIGH,
-    /* 0x05 */ PLAYER_LIMB_R_SHIN,
-    /* 0x06 */ PLAYER_LIMB_R_FOOT,
-    /* 0x07 */ PLAYER_LIMB_L_THIGH,
-    /* 0x08 */ PLAYER_LIMB_L_SHIN,
-    /* 0x09 */ PLAYER_LIMB_L_FOOT,
-    /* 0x0A */ PLAYER_LIMB_UPPER,
-    /* 0x0B */ PLAYER_LIMB_HEAD,
-    /* 0x0C */ PLAYER_LIMB_HAT,
-    /* 0x0D */ PLAYER_LIMB_COLLAR,
-    /* 0x0E */ PLAYER_LIMB_L_SHOULDER,
-    /* 0x0F */ PLAYER_LIMB_L_FOREARM,
+typedef enum {  // look at sUpperBodyLimbCopyMap
+    /* 0x00 */ PLAYER_ADULT_LIMB_NONE,
+    /* 0x01 */ PLAYER_ADULT_LIMB_ROOT, // used in OverrideLimbDrawGameplayCommon, doesn't deform, has no BODYPART equivalent
+    /* 0x02 */ PLAYER_ADULT_LIMB_WAIST, // user in OverrideLimbDrawGameplayDefault, doesn't deform, has no BODYPART equivalent
+    /* 0x03 */ PLAYER_ADULT_LIMB_LOWER, // not used anywhere but defining upper/lower, doesn't deform, has no BODYPART equivalent
+    /* 0x04 */ PLAYER_ADULT_LIMB_R_THIGH, // in OverrideLimbDrawGameplayCommon, the thighs adjust the legs based on the ground
+    /* 0x05 */ PLAYER_ADULT_LIMB_R_SHIN,
+    /* 0x06 */ PLAYER_ADULT_LIMB_R_FOOT, 
+    /* 0x07 */ PLAYER_ADULT_LIMB_L_THIGH,  
+    /* 0x08 */ PLAYER_ADULT_LIMB_L_SHIN,
+    /* 0x09 */ PLAYER_ADULT_LIMB_L_FOOT,
+    /* 0x0A */ PLAYER_ADULT_LIMB_UPPER, // in OverrideLimbDrawGameplayCommon, Upper is used to tilt around when running
+    /* 0x0B */ PLAYER_ADULT_LIMB_HEAD,
+    /* 0x0C */ PLAYER_ADULT_LIMB_HAT, // not used
+    /* 0x0D */ PLAYER_ADULT_LIMB_COLLAR, // not used
+    /* 0x0E */ PLAYER_ADULT_LIMB_L_SHOULDER, // not used
+    /* 0x0F */ PLAYER_ADULT_LIMB_L_FOREARM, // used for first person DLs
     /* 0x10 */ PLAYER_LIMB_L_HAND,
     /* 0x11 */ PLAYER_LIMB_R_SHOULDER,
     /* 0x12 */ PLAYER_LIMB_R_FOREARM,
     /* 0x13 */ PLAYER_LIMB_R_HAND,
     /* 0x14 */ PLAYER_LIMB_SHEATH,
     /* 0x15 */ PLAYER_LIMB_TORSO,
-    /* 0x16 */ PLAYER_LIMB_MAX = 0x1C
+    /* 0x16 */ PLAYER_ADULT_LIMB_MAX
 } PlayerLimb;
+
+typedef enum {  // look at sUpperBodyLimbCopyMap
+    /* 0x00 */ PLAYER_WOLF_LIMB_NONE, // NONE
+    /* 0x01 */ PLAYER_WOLF_LIMB_ROOT, // ROOT
+    /* 0x02 */ PLAYER_WOLF_LIMB_WAIST, // WAIST
+    /* 0x03 */ PLAYER_WOLF_LIMB_LOWER, // LOWER
+    /* 0x04 */ PLAYER_WOLF_LIMB_R_THIGH, // R_THIGH
+    /* 0x05 */ PLAYER_WOLF_LIMB_R_LEG, // R_SHIN
+    /* 0x06 */ PLAYER_WOLF_LIMB_R_FOOT, 
+    /* 0x07 */ PLAYER_WOLF_LIMB_R_PAW, // R_FOOT
+    /* 0x08 */ PLAYER_WOLF_LIMB_TAIL_ROOT, 
+    /* 0x09 */ PLAYER_WOLF_LIMB_TAIL_END,
+    /* 0x0A */ PLAYER_WOLF_LIMB_L_THIGH, // L_THIGH
+    /* 0x0B */ PLAYER_WOLF_LIMB_L_LEG, // L_SHIN
+    /* 0x0C */ PLAYER_WOLF_LIMB_L_FOOT,
+    /* 0x0D */ PLAYER_WOLF_LIMB_L_PAW, // L_FOOT
+    /* 0x0E */ PLAYER_WOLF_LIMB_UPPER, // UPPER
+    /* 0x0F */ PLAYER_WOLF_LIMB_NECK, // HEAD
+    /* 0x10 */ PLAYER_WOLF_LIMB_HEAD, 
+    /* 0x11 */ PLAYER_WOLF_LIMB_JAW,
+    /* 0x12 */ PLAYER_WOLF_LIMB_L_SHOULDER,
+    /* 0x13 */ PLAYER_WOLF_LIMB_L_ARM, // L_SHOULDER
+    /* 0x14 */ PLAYER_WOLF_LIMB_L_FOREARM, // L_FOREARM
+    /* 0x15 */ PLAYER_WOLF_LIMB_L_HAND,
+    /* 0x16 */ PLAYER_WOLF_LIMB_L_PAD, // L_HAND
+    /* 0x17 */ PLAYER_WOLF_LIMB_R_SHOULDER,
+    /* 0x18 */ PLAYER_WOLF_LIMB_R_ARM, // R_SHOULDER
+    /* 0x19 */ PLAYER_WOLF_LIMB_R_FOREARM, // R_FOREARM
+    /* 0x1A */ PLAYER_WOLF_LIMB_R_HAND, 
+    /* 0x1B */ PLAYER_WOLF_LIMB_R_PAD, // R_HAND
+    /* 0x1C */ PLAYER_WOLF_LIMB_MAX // MAX
+} PlayerWolfLimb;
 
 typedef enum {
     /* 0x00 */ PLAYER_BODYPART_WAIST,      // PLAYER_LIMB_WAIST
@@ -350,7 +382,7 @@ typedef enum {
 } PlayerAnimGroup;
 
 #define LIMB_BUF_COUNT(limbCount) ((ALIGN16((limbCount) * sizeof(Vec3s)) + sizeof(Vec3s) - 1) / sizeof(Vec3s))
-#define PLAYER_LIMB_BUF_COUNT LIMB_BUF_COUNT(PLAYER_LIMB_MAX)
+#define PLAYER_LIMB_BUF_COUNT LIMB_BUF_COUNT(PLAYER_WOLF_LIMB_MAX)
 
 typedef enum {
     /* 0x00 */ PLAYER_CSACTION_NONE,

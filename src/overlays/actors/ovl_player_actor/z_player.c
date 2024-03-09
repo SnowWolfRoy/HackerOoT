@@ -346,7 +346,7 @@ static Input* sControlInput;
 
 // .data
 
-static u8 sUpperBodyLimbCopyMap[PLAYER_LIMB_MAX] = {
+static u8 sUpperBodyLimbCopyMap[PLAYER_WOLF_LIMB_MAX] = {
     false, // PLAYER_LIMB_NONE
     false, // PLAYER_LIMB_ROOT
     false, // PLAYER_LIMB_WAIST
@@ -10258,10 +10258,10 @@ void Player_InitCommon(Player* this, PlayState* play, FlexSkeletonHeader* skelHe
     func_80834644(play, this);
 
     SkelAnime_InitLink(play, &this->skelAnime, skelHeader, GET_PLAYER_ANIM(PLAYER_ANIMGROUP_wait, this->modelAnimType),
-                       9, this->jointTable, this->morphTable, PLAYER_LIMB_MAX);
+                       9, this->jointTable, this->morphTable, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_MAX : PLAYER_WOLF_LIMB_MAX));
     this->skelAnime.baseTransl = sSkeletonBaseTransl;
     SkelAnime_InitLink(play, &this->skelAnimeUpper, skelHeader, func_80833338(this), 9, this->jointTableUpper,
-                       this->morphTableUpper, PLAYER_LIMB_MAX);
+                       this->morphTableUpper, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_MAX : PLAYER_WOLF_LIMB_MAX));
     this->skelAnimeUpper.baseTransl = sSkeletonBaseTransl;
 
     Effect_Add(play, &this->meleeWeaponEffectIndex, EFFECT_BLURE2, 0, 0, &D_8085470C);

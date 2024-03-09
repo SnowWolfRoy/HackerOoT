@@ -1053,7 +1053,7 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
                                           void* thisx) {
     Player* this = (Player*)thisx;
 
-    if (limbIndex == PLAYER_LIMB_ROOT) {
+    if (limbIndex == PLAYER_WOLF_LIMB_ROOT) {
         sLeftHandType = this->leftHandType;
         sRightHandType = this->rightHandType;
 
@@ -1092,31 +1092,62 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
             sCurBodyPartPos++;
         }
 
-        if (limbIndex == PLAYER_LIMB_HEAD) {
-            rot->x += this->unk_6BA;
-            rot->y -= this->unk_6B8;
-            rot->z += this->unk_6B6;
-        } else if (limbIndex == PLAYER_LIMB_UPPER) {
-            if (this->unk_6B0 != 0) {
-                Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
-                Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
-            }
-            if (this->unk_6BE != 0) {
-                Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
-            }
-            if (this->unk_6BC != 0) {
-                Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
-            }
-            if (this->unk_6C0 != 0) {
-                Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
-            }
-        } else if (limbIndex == PLAYER_LIMB_L_THIGH) {
-            func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_LIMB_L_THIGH, PLAYER_LIMB_L_SHIN,
-                          PLAYER_LIMB_L_FOOT);
-        } else if (limbIndex == PLAYER_LIMB_R_THIGH) {
-            func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_LIMB_R_THIGH, PLAYER_LIMB_R_SHIN,
-                          PLAYER_LIMB_R_FOOT);
-        } else {
+        if (LINK_IS_ADULT) {
+
+            if (limbIndex == PLAYER_ADULT_LIMB_HEAD) {
+                rot->x += this->unk_6BA;
+                rot->y -= this->unk_6B8;
+                rot->z += this->unk_6B6;
+            } else if (limbIndex == PLAYER_ADULT_LIMB_UPPER) { // this is rotating link's upper body to blend the animation when running for ex
+                if (this->unk_6B0 != 0) {
+                    Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
+                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
+                }
+                if (this->unk_6BE != 0) {
+                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
+                }
+                if (this->unk_6BC != 0) {
+                    Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
+                }
+                if (this->unk_6C0 != 0) {
+                    Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
+                }
+            } else if (limbIndex == PLAYER_ADULT_LIMB_L_THIGH) {
+                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_ADULT_LIMB_L_THIGH, PLAYER_ADULT_LIMB_L_SHIN,
+                            PLAYER_ADULT_LIMB_L_FOOT);
+            } else if (limbIndex == PLAYER_ADULT_LIMB_R_THIGH) {
+                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_ADULT_LIMB_R_THIGH, PLAYER_ADULT_LIMB_R_SHIN,
+                            PLAYER_ADULT_LIMB_R_FOOT);
+
+        }} else if (LINK_IS_CHILD) { 
+            // as far as I could tell, duplicating this entire section was the only way to avoid 
+            // the wrong bones being processed on the wrong model. there may be a more elegant solution to this
+
+            if (limbIndex == PLAYER_WOLF_LIMB_NECK) { // rotations based on Z-target? head looks at target
+                rot->x += this->unk_6BA;
+                rot->y -= this->unk_6B8;
+                rot->z += this->unk_6B6;
+            } else if (limbIndex == PLAYER_WOLF_LIMB_UPPER) { // this is rotating link's upper body to blend the animation when running for ex
+                if (this->unk_6B0 != 0) {
+                    Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
+                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
+                }
+                if (this->unk_6BE != 0) {
+                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
+                }
+                if (this->unk_6BC != 0) {
+                    Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
+                }
+                if (this->unk_6C0 != 0) {
+                    Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
+                }
+            } else if (limbIndex == PLAYER_WOLF_LIMB_L_THIGH) { // adjusts left leg depending on floor
+                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_WOLF_LIMB_L_THIGH, PLAYER_WOLF_LIMB_L_LEG,
+                            PLAYER_WOLF_LIMB_L_PAW);
+            } else if (limbIndex == PLAYER_WOLF_LIMB_R_THIGH) { // adjusts right leg depending on floor
+                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_WOLF_LIMB_R_THIGH, PLAYER_WOLF_LIMB_R_LEG,
+                            PLAYER_WOLF_LIMB_R_PAW);
+            }} else {
             return false;
         }
     }
@@ -1179,7 +1210,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
             }
 
             *dList = *(dLists + sDListsLodOffset);
-        } else if (limbIndex == PLAYER_LIMB_WAIST) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_WAIST) {
             *dList = *(this->waistDLists + sDListsLodOffset);
         }
     }
@@ -1194,7 +1225,7 @@ s32 Player_OverrideLimbDrawGameplayFirstPerson(PlayState* play, s32 limbIndex, G
     if (!Player_OverrideLimbDrawGameplayCommon(play, limbIndex, dList, pos, rot, thisx)) {
         if (this->unk_6AD != 2) {
             *dList = NULL;
-        } else if (limbIndex == PLAYER_LIMB_L_FOREARM) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_L_FOREARM) {
             *dList = sFirstPersonLeftForearmDLs[(void)0, gSaveContext.save.linkAge];
         } else if (limbIndex == PLAYER_LIMB_L_HAND) {
             *dList = sFirstPersonLeftHandDLs[(void)0, gSaveContext.save.linkAge];
@@ -1640,14 +1671,15 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
                // Matrix_TranslateRotateZYX(&sSheathLimbModelShieldOnBackPos, &sSheathLimbModelShieldOnBackZyxRot);
                 Matrix_Get(&this->shieldMf);
             }
-        } else if (limbIndex == PLAYER_LIMB_HEAD) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_HEAD) {
             Matrix_MultVec3f(&sPlayerFocusHeadLimbModelPos, &this->actor.focus.pos);
         } else {
             Vec3f* footPos = &sLeftRightFootLimbModelFootPos[((void)0, gSaveContext.save.linkAge)];
 
             // The same model position is used for both feet,
             // but the resulting world position will be different for each limb.
-            Actor_SetFeetPos(&this->actor, limbIndex, PLAYER_LIMB_L_FOOT, footPos, PLAYER_LIMB_R_FOOT, footPos);
+            Actor_SetFeetPos(&this->actor, limbIndex, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_L_FOOT : PLAYER_WOLF_LIMB_L_FOOT), 
+            footPos, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_R_FOOT : PLAYER_WOLF_LIMB_R_FOOT), footPos);
         }
     }
 }
@@ -1672,7 +1704,7 @@ u32 Player_InitPauseDrawData(PlayState* play, u8* segment, SkelAnime* skelAnime)
         VIRTUAL_TO_PHYSICAL(segment + PAUSE_EQUIP_BUFFER_SIZE + PAUSE_PLAYER_SEGMENT_GAMEPLAY_KEEP_BUFFER_SIZE);
 
     SkelAnime_InitLink(play, skelAnime, gPlayerSkelHeaders[(void)0, gSaveContext.save.linkAge],
-                       &gPlayerAnim_link_normal_wait, 9, ptr, ptr, PLAYER_LIMB_MAX);
+                       &gPlayerAnim_link_normal_wait, 9, ptr, ptr, PLAYER_WOLF_LIMB_MAX);
 
     return PAUSE_EQUIP_BUFFER_SIZE + PAUSE_PLAYER_SEGMENT_GAMEPLAY_KEEP_BUFFER_SIZE + size +
            sizeof(Vec3s[PLAYER_LIMB_BUF_COUNT]);
@@ -1719,7 +1751,7 @@ s32 Player_OverrideLimbDrawPause(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         if ((type == PLAYER_MODELTYPE_SHEATH_18) || (type == PLAYER_MODELTYPE_SHEATH_19)) {
             dListOffset = playerSwordAndShield[1] * 4;
         }
-    } else if (limbIndex == PLAYER_LIMB_WAIST) {
+    } else if (limbIndex == PLAYER_ADULT_LIMB_WAIST) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_WAIST];
     } else {
         return false;

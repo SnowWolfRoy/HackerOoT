@@ -215,7 +215,7 @@ s32 Ge2_DetectPlayerInUpdate(PlayState* play, EnGe2* this, Vec3f* pos, s16 yRot,
         return 0;
     }
 
-    if (BgCheck_AnyLineTest1(&play->colCtx, pos, &player->bodyPartsPos[PLAYER_BODYPART_HEAD], &posResult, &outPoly,
+    if (BgCheck_AnyLineTest1(&play->colCtx, pos, &player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)], &posResult, &outPoly,
                              0)) {
         return 0;
     }

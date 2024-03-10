@@ -1125,7 +1125,7 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
 
             if (limbIndex == PLAYER_WOLF_LIMB_NECK) { // rotations based on Z-target? head looks at target
                 rot->x += this->unk_6BA;
-                rot->y -= this->unk_6B8;
+                rot->y -= this->unk_6B8; // play with this value to try and tilt it the other way, look at girl above kokiri shop
                 rot->z += this->unk_6B6;
             } else if (limbIndex == PLAYER_WOLF_LIMB_UPPER) { // this is rotating link's upper body to blend the animation when running for ex
                 if (this->unk_6B0 != 0) {
@@ -1166,7 +1166,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
         if (!LINK_IS_ADULT) {
             return false;
         }
-        if (limbIndex == PLAYER_LIMB_L_HAND) {
+        if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
             Gfx** dLists = this->leftHandDLists;
 
             if ((sLeftHandType == PLAYER_MODELTYPE_LH_BGS) && (gSaveContext.save.info.playerData.swordHealth <= 0.0f)) {
@@ -1181,7 +1181,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
             }
 
             *dList = *(dLists + sDListsLodOffset);
-        } else if (limbIndex == PLAYER_LIMB_R_HAND) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
             Gfx** dLists = this->rightHandDLists;
 
             if (sRightHandType == PLAYER_MODELTYPE_RH_SHIELD) {
@@ -1193,7 +1193,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
             }
 
             *dList = *(dLists + sDListsLodOffset);
-        } else if (limbIndex == PLAYER_LIMB_SHEATH) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
             Gfx** dLists = this->sheathDLists;
 
             if ((this->sheathType == PLAYER_MODELTYPE_SHEATH_18) || (this->sheathType == PLAYER_MODELTYPE_SHEATH_19)) {
@@ -1227,13 +1227,13 @@ s32 Player_OverrideLimbDrawGameplayFirstPerson(PlayState* play, s32 limbIndex, G
             *dList = NULL;
         } else if (limbIndex == PLAYER_ADULT_LIMB_L_FOREARM) {
             *dList = sFirstPersonLeftForearmDLs[(void)0, gSaveContext.save.linkAge];
-        } else if (limbIndex == PLAYER_LIMB_L_HAND) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
             *dList = sFirstPersonLeftHandDLs[(void)0, gSaveContext.save.linkAge];
-        } else if (limbIndex == PLAYER_LIMB_R_SHOULDER) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_R_SHOULDER) {
             *dList = sFirstPersonRightShoulderDLs[(void)0, gSaveContext.save.linkAge];
-        } else if (limbIndex == PLAYER_LIMB_R_FOREARM) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_R_FOREARM) {
             *dList = sFirstPersonForearmDLs[(void)0, gSaveContext.save.linkAge];
-        } else if (limbIndex == PLAYER_LIMB_R_HAND) {
+        } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
             *dList = Player_HoldsHookshot(this)
                          ? gLinkAdultRightHandHoldingHookshotFarDL
                          : sFirstPersonRightHandHoldingWeaponDLs[(void)0, gSaveContext.save.linkAge];
@@ -1492,7 +1492,7 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         Matrix_MultVec3f(&sZeroVec, sCurBodyPartPos);
     }
 
-    if (limbIndex == PLAYER_LIMB_L_HAND) {
+    if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
         MtxF sp14C;
         Actor* hookedActor;
 
@@ -1571,7 +1571,7 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
                 Matrix_MtxFToYXZRotS(&this->mf_9E0, &this->unk_3BC, 0);
             }
         }
-    } else if (limbIndex == PLAYER_LIMB_R_HAND) {
+    } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
         Actor* heldActor = this->heldActor;
 
         if (this->rightHandType == PLAYER_MODELTYPE_RH_FF) {
@@ -1649,10 +1649,10 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
                 if (!(this->stateFlags1 & PLAYER_STATE1_10) && (this->unk_862 != 0) &&
                     (this->exchangeItemId != EXCH_ITEM_NONE)) {
                     Math_Vec3f_Copy(&sGetItemRefPos, &this->leftHandPos);
-                } else {
-                    sGetItemRefPos.x = (this->bodyPartsPos[PLAYER_BODYPART_R_HAND].x + this->leftHandPos.x) * 0.5f;
-                    sGetItemRefPos.y = (this->bodyPartsPos[PLAYER_BODYPART_R_HAND].y + this->leftHandPos.y) * 0.5f;
-                    sGetItemRefPos.z = (this->bodyPartsPos[PLAYER_BODYPART_R_HAND].z + this->leftHandPos.z) * 0.5f;
+                } else {  // this sets reference position for getitem based on average of both hand positions
+                    sGetItemRefPos.x = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].x + this->leftHandPos.x) * 0.5f;
+                    sGetItemRefPos.y = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].y + this->leftHandPos.y) * 0.5f;
+                    sGetItemRefPos.z = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].z + this->leftHandPos.z) * 0.5f;
                 }
 
                 if (this->unk_862 == 0) {
@@ -1661,7 +1661,7 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
             }
         }
     } else if (this->actor.scale.y >= 0.0f) {
-        if (limbIndex == PLAYER_LIMB_SHEATH) {
+        if (limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
             if ((this->rightHandType != PLAYER_MODELTYPE_RH_SHIELD) &&
                 (this->rightHandType != PLAYER_MODELTYPE_RH_FF)) {
                 if (Player_IsChildWithHylianShield(this)) {
@@ -1734,19 +1734,19 @@ s32 Player_OverrideLimbDrawPause(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         modelGroup = PLAYER_MODELGROUP_CHILD_HYLIAN_SHIELD;
     }
 
-    if (limbIndex == PLAYER_LIMB_L_HAND) {
+    if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_LEFT_HAND];
         sLeftHandType = type;
         if ((type == PLAYER_MODELTYPE_LH_BGS) && (gSaveContext.save.info.playerData.swordHealth <= 0.0f)) {
             dListOffset = 4;
         }
-    } else if (limbIndex == PLAYER_LIMB_R_HAND) {
+    } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_RIGHT_HAND];
         sRightHandType = type;
         if (type == PLAYER_MODELTYPE_RH_SHIELD) {
             dListOffset = playerSwordAndShield[1] * 4;
         }
-    } else if (limbIndex == PLAYER_LIMB_SHEATH) {
+    } else if (limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_SHEATH];
         if ((type == PLAYER_MODELTYPE_SHEATH_18) || (type == PLAYER_MODELTYPE_SHEATH_19)) {
             dListOffset = playerSwordAndShield[1] * 4;

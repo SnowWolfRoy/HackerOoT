@@ -3318,7 +3318,7 @@ void BossVa_UpdateEffects(PlayState* play) {
                 effect->pos.y = effect->offset.y + refActor->actor.world.pos.y;
                 effect->pos.z = effect->offset.z + refActor->actor.world.pos.z;
             } else {
-                spB6 = Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
+                spB6 = Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
                 effect->pos.x = player->bodyPartsPos[spB6].x + Rand_CenteredFloat(10.0f);
                 effect->pos.y = player->bodyPartsPos[spB6].y + Rand_CenteredFloat(15.0f);
                 effect->pos.z = player->bodyPartsPos[spB6].z + Rand_CenteredFloat(10.0f);
@@ -3746,7 +3746,7 @@ void BossVa_SpawnSpark(PlayState* play, BossVaEffect* effect, BossVa* this, Vec3
 
                 case SPARK_LINK:
                     effect->type = VA_SMALL_SPARK;
-                    index = Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
+                    index = Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
                     effect->pos.x = player->bodyPartsPos[index].x + Rand_CenteredFloat(10.0f);
                     effect->pos.y = player->bodyPartsPos[index].y + Rand_CenteredFloat(15.0f);
                     effect->pos.z = player->bodyPartsPos[index].z + Rand_CenteredFloat(10.0f);

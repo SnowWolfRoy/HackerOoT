@@ -181,7 +181,7 @@ void EffectSsFhgFlash_UpdateShock(PlayState* play, u32 index, EffectSs* this) {
 
     if (this->rParam == FHGFLASH_SHOCK_PLAYER) {
         player = GET_PLAYER(play);
-        randBodyPart = Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
+        randBodyPart = Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
         this->pos.x = player->bodyPartsPos[randBodyPart].x + Rand_CenteredFloat(10.0f);
         this->pos.y = player->bodyPartsPos[randBodyPart].y + Rand_CenteredFloat(15.0f);
         this->pos.z = player->bodyPartsPos[randBodyPart].z + Rand_CenteredFloat(10.0f);

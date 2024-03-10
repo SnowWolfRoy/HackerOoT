@@ -1867,7 +1867,7 @@ void func_80902348(BossGanon2* this, PlayState* play) {
         temp_f12 = -200.0f - player->actor.world.pos.z;
 
         if (sqrtf(SQ(temp_f2) + SQ(temp_f12)) > 784.0f) {
-            for (j = 0; j < PLAYER_BODYPART_MAX; j++) {
+            for (j = 0; j < (LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX); j++) {
                 player->flameTimers[j] = Rand_S16Offset(0, 200);
             }
 

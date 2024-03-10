@@ -395,7 +395,7 @@ void DemoDu_CsGoronsRuby_SpawnDustWhenHittingLink(DemoDu* this, PlayState* play)
         s32 pad[2];
         s32 i;
         Player* player = GET_PLAYER(play);
-        Vec3f* pos = &player->bodyPartsPos[PLAYER_BODYPART_L_FOREARM];
+        Vec3f* pos = &player->bodyPartsPos[PLAYER_ADULT_BODYPART_L_FOREARM];
         Vec3f velocity = { 0.0f, 0.0f, 0.0f };
         Vec3f accel = { 0.0f, 0.3f, 0.0f };
         s32 pad2;

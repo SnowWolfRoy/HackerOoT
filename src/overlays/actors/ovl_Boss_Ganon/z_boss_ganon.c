@@ -3353,7 +3353,7 @@ void BossGanon_DrawShock(BossGanon* this, PlayState* play) {
         if (this->unk_2E8 != 0) {
             Player* player = GET_PLAYER(play);
 
-            for (i = 0; i < PLAYER_BODYPART_MAX; i++) {
+            for (i = 0; i < (LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX); i++) {
                 Matrix_Translate(player->bodyPartsPos[i].x, player->bodyPartsPos[i].y, player->bodyPartsPos[i].z,
                                  MTXMODE_NEW);
                 Matrix_ReplaceRotation(&play->billboardMtxF);
@@ -3534,7 +3534,7 @@ void BossGanon_DrawTriforce(BossGanon* this, PlayState* play) {
         if (this->triforceType == GDF_TRIFORCE_PLAYER) {
             Player* player = GET_PLAYER(play);
 
-            this->triforcePos = player->bodyPartsPos[PLAYER_BODYPART_L_HAND];
+            this->triforcePos = player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)];
 
             this->triforcePos.x += -0.6f;
             this->triforcePos.y += 3.0f;
@@ -4688,7 +4688,7 @@ void BossGanon_UpdateEffects(PlayState* play) {
                     eff->pos.y = sGanondorf->unk_2EC[bodyPart].y + Rand_CenteredFloat(20.0f);
                     eff->pos.z = sGanondorf->unk_2EC[bodyPart].z + Rand_CenteredFloat(20.0f);
                 } else {
-                    bodyPart = (s16)Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
+                    bodyPart = (s16)Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
 
                     eff->pos.x = player->bodyPartsPos[bodyPart].x + Rand_CenteredFloat(10.0f);
                     eff->pos.y = player->bodyPartsPos[bodyPart].y + Rand_CenteredFloat(15.0f);

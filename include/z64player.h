@@ -157,12 +157,12 @@ typedef enum {  // look at sUpperBodyLimbCopyMap
     /* 0x0D */ PLAYER_ADULT_LIMB_COLLAR, // not used
     /* 0x0E */ PLAYER_ADULT_LIMB_L_SHOULDER, // not used
     /* 0x0F */ PLAYER_ADULT_LIMB_L_FOREARM, // used for first person DLs
-    /* 0x10 */ PLAYER_LIMB_L_HAND,
-    /* 0x11 */ PLAYER_LIMB_R_SHOULDER,
-    /* 0x12 */ PLAYER_LIMB_R_FOREARM,
-    /* 0x13 */ PLAYER_LIMB_R_HAND,
-    /* 0x14 */ PLAYER_LIMB_SHEATH,
-    /* 0x15 */ PLAYER_LIMB_TORSO,
+    /* 0x10 */ PLAYER_ADULT_LIMB_L_HAND, //  used for general DLs holding items/sword (link is left handed after all)
+    /* 0x11 */ PLAYER_ADULT_LIMB_R_SHOULDER, // used for first person DLs
+    /* 0x12 */ PLAYER_ADULT_LIMB_R_FOREARM, // used for first person DLs
+    /* 0x13 */ PLAYER_ADULT_LIMB_R_HAND, // used for right hand DLs to hold stuff like shield, bow, hookshot, etc.
+    /* 0x14 */ PLAYER_ADULT_LIMB_SHEATH, // used for DLs depending on if he has sword out, and what shield is equipped
+    /* 0x15 */ PLAYER_ADULT_LIMB_TORSO, // not used. I think this bone exists just so the armature is fully rigged
     /* 0x16 */ PLAYER_ADULT_LIMB_MAX
 } PlayerLimb;
 
@@ -199,26 +199,56 @@ typedef enum {  // look at sUpperBodyLimbCopyMap
 } PlayerWolfLimb;
 
 typedef enum {
-    /* 0x00 */ PLAYER_BODYPART_WAIST,      // PLAYER_LIMB_WAIST
-    /* 0x01 */ PLAYER_BODYPART_R_THIGH,    // PLAYER_LIMB_R_THIGH
-    /* 0x02 */ PLAYER_BODYPART_R_SHIN,     // PLAYER_LIMB_R_SHIN
-    /* 0x03 */ PLAYER_BODYPART_R_FOOT,     // PLAYER_LIMB_R_FOOT
-    /* 0x04 */ PLAYER_BODYPART_L_THIGH,    // PLAYER_LIMB_L_THIGH
-    /* 0x05 */ PLAYER_BODYPART_L_SHIN,     // PLAYER_LIMB_L_SHIN
-    /* 0x06 */ PLAYER_BODYPART_L_FOOT,     // PLAYER_LIMB_L_FOOT
-    /* 0x07 */ PLAYER_BODYPART_HEAD,       // PLAYER_LIMB_HEAD
-    /* 0x08 */ PLAYER_BODYPART_HAT,        // PLAYER_LIMB_HAT
-    /* 0x09 */ PLAYER_BODYPART_COLLAR,     // PLAYER_LIMB_COLLAR
-    /* 0x0A */ PLAYER_BODYPART_L_SHOULDER, // PLAYER_LIMB_L_SHOULDER
-    /* 0x0B */ PLAYER_BODYPART_L_FOREARM,  // PLAYER_LIMB_L_FOREARM
-    /* 0x0C */ PLAYER_BODYPART_L_HAND,     // PLAYER_LIMB_L_HAND
-    /* 0x0D */ PLAYER_BODYPART_R_SHOULDER, // PLAYER_LIMB_R_SHOULDER
-    /* 0x0E */ PLAYER_BODYPART_R_FOREARM,  // PLAYER_LIMB_R_FOREARM
-    /* 0x0F */ PLAYER_BODYPART_R_HAND,     // PLAYER_LIMB_R_HAND
-    /* 0x10 */ PLAYER_BODYPART_SHEATH,     // PLAYER_LIMB_SHEATH
-    /* 0x11 */ PLAYER_BODYPART_TORSO,      // PLAYER_LIMB_TORSO
-    /* 0x12 */ PLAYER_BODYPART_MAX
+    /* 0x00 */ PLAYER_ADULT_BODYPART_WAIST,         // PLAYER_LIMB_WAIST // used for a lof ot positioning behaviours with camera, fairies, thunder actor, water ripples etc.
+    /* 0x01 */ PLAYER_ADULT_BODYPART_R_THIGH,       // PLAYER_LIMB_R_THIGH // unused
+    /* 0x02 */ PLAYER_ADULT_BODYPART_R_SHIN,        // PLAYER_LIMB_R_SHIN // unused
+    /* 0x03 */ PLAYER_ADULT_BODYPART_R_FOOT,        // PLAYER_LIMB_R_FOOT // used to set lower bounds of hurtbox
+    /* 0x04 */ PLAYER_ADULT_BODYPART_L_THIGH,       // PLAYER_LIMB_L_THIGH // unused
+    /* 0x05 */ PLAYER_ADULT_BODYPART_L_SHIN,        // PLAYER_LIMB_L_SHIN // unused
+    /* 0x06 */ PLAYER_ADULT_BODYPART_L_FOOT,        // PLAYER_LIMB_L_FOOT // usedd to set lower bounds of hurtbox
+    /* 0x07 */ PLAYER_ADULT_BODYPART_HEAD,          // PLAYER_LIMB_HEAD // used to set upper bounds of hurtbox, navi talking scenes, shooting the sun somehow ? and gerudo los detection
+    /* 0x08 */ PLAYER_ADULT_BODYPART_HAT,           // PLAYER_LIMB_HAT // used for positioning navi around link's hat in various situations
+    /* 0x09 */ PLAYER_ADULT_BODYPART_COLLAR,        // PLAYER_LIMB_COLLAR // unused
+    /* 0x0A */ PLAYER_ADULT_BODYPART_L_SHOULDER,    // PLAYER_LIMB_L_SHOULDER // unused
+    /* 0x0B */ PLAYER_ADULT_BODYPART_L_FOREARM,     // PLAYER_LIMB_L_FOREARM // used in demo_du for a goron ruby cutscene?
+    /* 0x0C */ PLAYER_ADULT_BODYPART_L_HAND,        // PLAYER_LIMB_L_HAND // used to draw triforce during ganon fight, and used in nayru's love
+    /* 0x0D */ PLAYER_ADULT_BODYPART_R_SHOULDER,    // PLAYER_LIMB_R_SHOULDER // unused
+    /* 0x0E */ PLAYER_ADULT_BODYPART_R_FOREARM,     // PLAYER_LIMB_R_FOREARM // unused
+    /* 0x0F */ PLAYER_ADULT_BODYPART_R_HAND,        // PLAYER_LIMB_R_HAND // get item references this, used in twinrova fight for the reflect mechanic, fishing, rotates when holding long weapon, and used in nayru's love
+    /* 0x10 */ PLAYER_ADULT_BODYPART_SHEATH,        // PLAYER_LIMB_SHEATH // unused
+    /* 0x11 */ PLAYER_ADULT_BODYPART_TORSO,         // PLAYER_LIMB_TORSO  // unused
+    /* 0x12 */ PLAYER_ADULT_BODYPART_MAX            // used in effects that go over each limb such as fire. used to draw a dynamic shadow ?
 } PlayerBodyPart;
+
+typedef enum {
+    /* 0x00 */ PLAYER_WOLF_BODYPART_WAIST, // WAIST
+    /* 0x01 */ PLAYER_WOLF_BODYPART_LOWER, // LOWER
+    /* 0x02 */ PLAYER_WOLF_BODYPART_R_THIGH, // R_THIGH
+    /* 0x03 */ PLAYER_WOLF_BODYPART_R_LEG, // R_SHIN
+    /* 0x04 */ PLAYER_WOLF_BODYPART_R_FOOT, 
+    /* 0x05 */ PLAYER_WOLF_BODYPART_R_PAW, // R_FOOT
+    /* 0x06 */ PLAYER_WOLF_BODYPART_TAIL_ROOT, 
+    /* 0x07 */ PLAYER_WOLF_BODYPART_TAIL_END,
+    /* 0x08 */ PLAYER_WOLF_BODYPART_L_THIGH, // L_THIGH
+    /* 0x09 */ PLAYER_WOLF_BODYPART_L_LEG, // L_SHIN
+    /* 0x0A */ PLAYER_WOLF_BODYPART_L_FOOT,
+    /* 0x0B */ PLAYER_WOLF_BODYPART_L_PAW, // L_FOOT
+    /* 0x0C */ PLAYER_WOLF_BODYPART_UPPER, // UPPER
+    /* 0x0D */ PLAYER_WOLF_BODYPART_NECK, // HEAD
+    /* 0x0E */ PLAYER_WOLF_BODYPART_HEAD, 
+    /* 0x0F */ PLAYER_WOLF_BODYPART_JAW,
+    /* 0x10 */ PLAYER_WOLF_BODYPART_L_SHOULDER,
+    /* 0x11 */ PLAYER_WOLF_BODYPART_L_ARM, // L_SHOULDER
+    /* 0x12 */ PLAYER_WOLF_BODYPART_L_FOREARM, // L_FOREARM
+    /* 0x13 */ PLAYER_WOLF_BODYPART_L_HAND,
+    /* 0x14 */ PLAYER_WOLF_BODYPART_L_PAD, // L_HAND
+    /* 0x15 */ PLAYER_WOLF_BODYPART_R_SHOULDER,
+    /* 0x16 */ PLAYER_WOLF_BODYPART_R_ARM, // R_SHOULDER
+    /* 0x17 */ PLAYER_WOLF_BODYPART_R_FOREARM, // R_FOREARM
+    /* 0x18 */ PLAYER_WOLF_BODYPART_R_HAND, 
+    /* 0x19 */ PLAYER_WOLF_BODYPART_R_PAD, // R_HAND
+    /* 0x1A */ PLAYER_WOLF_BODYPART_MAX // MAX
+} PlayerWolfBodyPart;
 
 typedef enum {
     /*  0 */ PLAYER_MWA_FORWARD_SLASH_1H,
@@ -781,11 +811,11 @@ typedef struct Player {
     /* 0x08AC */ f32 pushedSpeed; // Pushing player, examples include water currents, floor conveyors, climbing sloped surfaces
     /* 0x08B0 */ s16 pushedYaw; // Yaw direction of player being pushed
     /* 0x08B4 */ WeaponInfo meleeWeaponInfo[3];
-    /* 0x0908 */ Vec3f bodyPartsPos[PLAYER_BODYPART_MAX];
+    /* 0x0908 */ Vec3f bodyPartsPos[PLAYER_WOLF_BODYPART_MAX];
     /* 0x09E0 */ MtxF mf_9E0;
     /* 0x0A20 */ MtxF shieldMf;
     /* 0x0A60 */ u8 isBurning;
-    /* 0x0A61 */ u8 flameTimers[PLAYER_BODYPART_MAX]; // one flame per body part
+    /* 0x0A61 */ u8 flameTimers[PLAYER_WOLF_BODYPART_MAX]; // one flame per body part
     /* 0x0A73 */ u8 unk_A73;
     /* 0x0A74 */ PlayerFuncA74 func_A74;
     /* 0x0A78 */ s8 invincibilityTimer; // prevents damage when nonzero (positive = visible, counts towards zero each frame)
@@ -798,7 +828,7 @@ typedef struct Player {
     /* 0x0A84 */ s16 unk_A84;
     /* 0x0A86 */ s8 unk_A86;
     /* 0x0A87 */ u8 unk_A87;
-    /* 0x0A88 */ Vec3f unk_A88; // previous body part 0 position
+    /* 0x0A88 */ Vec3f unk_A88; // previous body part 0 position, only used for spawning ripples based on link's previous pos and current pos
 } Player; // size = 0xA94
 
 #endif

@@ -4155,8 +4155,8 @@ void func_80837530(PlayState* play, Player* this, s32 arg2) {
     this->stateFlags1 |= PLAYER_STATE1_12;
 
     if (this->actor.category == ACTORCAT_PLAYER) {
-        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_M_THUNDER, this->bodyPartsPos[PLAYER_BODYPART_WAIST].x,
-                    this->bodyPartsPos[PLAYER_BODYPART_WAIST].y, this->bodyPartsPos[PLAYER_BODYPART_WAIST].z, 0, 0, 0,
+        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_M_THUNDER, this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x,
+                    this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y, this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z, 0, 0, 0,
                     Player_GetMeleeWeaponHeld(this) | arg2);
     }
 }
@@ -4543,7 +4543,7 @@ void func_8083821C(Player* this) {
     s32 i;
 
     // clang-format off
-    for (i = 0; i < PLAYER_BODYPART_MAX; i++) { this->flameTimers[i] = Rand_S16Offset(0, 200); }
+    for (i = 0; i < (LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX); i++) { this->flameTimers[i] = Rand_S16Offset(0, 200); }
     // clang-format on
 
     this->isBurning = true;
@@ -6490,8 +6490,8 @@ s32 func_8083CFA8(PlayState* play, Player* this, f32 arg2, s32 splashScale) {
     s32 splashType;
 
     if (sp3C > 2.0f) {
-        splashPos.x = this->bodyPartsPos[PLAYER_BODYPART_WAIST].x;
-        splashPos.z = this->bodyPartsPos[PLAYER_BODYPART_WAIST].z;
+        splashPos.x = this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x;
+        splashPos.z = this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z;
         sp34 = this->actor.world.pos.y;
         if (WaterBox_GetSurface1(play, &play->colCtx, splashPos.x, splashPos.z, &sp34, &sp38)) {
             if ((sp34 - this->actor.world.pos.y) < 100.0f) {
@@ -6700,9 +6700,9 @@ void func_8083D6EC(PlayState* play, Player* this) {
 
     if (this->actor.bgCheckFlags & BGCHECKFLAG_WATER) {
         if (this->actor.yDistToWater < 50.0f) {
-            temp4 = fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].x - this->unk_A88.x) +
-                    fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].y - this->unk_A88.y) +
-                    fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].z - this->unk_A88.z);
+            temp4 = fabsf(this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x - this->unk_A88.x) +
+                    fabsf(this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y - this->unk_A88.y) +
+                    fabsf(this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z - this->unk_A88.z);
             if (temp4 > 4.0f) {
                 temp4 = 4.0f;
             }
@@ -6718,7 +6718,7 @@ void func_8083D6EC(PlayState* play, Player* this) {
 
                 if ((this->speedXZ > 4.0f) && !func_808332B8(this) &&
                     ((this->actor.world.pos.y + this->actor.yDistToWater) <
-                     this->bodyPartsPos[PLAYER_BODYPART_WAIST].y)) {
+                     this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y)) {
                     func_8083CFA8(play, this, 20.0f,
                                   (fabsf(this->speedXZ) * 50.0f) + (this->actor.yDistToWater * 5.0f));
                 }
@@ -6751,7 +6751,7 @@ s32 func_8083DB98(Player* this, s32 arg1) {
     s16 sp2C;
 
     sp30.x = this->actor.world.pos.x;
-    sp30.y = this->bodyPartsPos[PLAYER_BODYPART_HEAD].y + 3.0f;
+    sp30.y = this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)].y + 3.0f;
     sp30.z = this->actor.world.pos.z;
     sp2E = Math_Vec3f_Pitch(&sp30, &unk_664->focus.pos);
     sp2C = Math_Vec3f_Yaw(&sp30, &unk_664->focus.pos);
@@ -8621,7 +8621,7 @@ void func_80842A88(PlayState* play, Player* this) {
 s32 func_80842AC4(PlayState* play, Player* this) {
     if ((this->heldItemAction == PLAYER_IA_DEKU_STICK) && (this->unk_85C > 0.5f)) {
         if (AMMO(ITEM_DEKU_STICK) != 0) {
-            EffectSsStick_Spawn(play, &this->bodyPartsPos[PLAYER_BODYPART_R_HAND], this->actor.shape.rot.y + 0x8000);
+            EffectSsStick_Spawn(play, &this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND], this->actor.shape.rot.y + 0x8000);
             this->unk_85C = 0.5f;
             func_80842A88(play, this);
             Player_PlaySfx(this, NA_SE_IT_WOODSTICK_BROKEN);
@@ -8637,7 +8637,7 @@ s32 func_80842B7C(PlayState* play, Player* this) {
     if (this->heldItemAction == PLAYER_IA_SWORD_BIGGORON) {
         if (!gSaveContext.save.info.playerData.bgsFlag && (gSaveContext.save.info.playerData.swordHealth > 0.0f)) {
             if ((gSaveContext.save.info.playerData.swordHealth -= 1.0f) <= 0.0f) {
-                EffectSsStick_Spawn(play, &this->bodyPartsPos[PLAYER_BODYPART_R_HAND],
+                EffectSsStick_Spawn(play, &this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND],
                                     this->actor.shape.rot.y + 0x8000);
                 func_800849EC(play);
                 Player_PlaySfx(this, NA_SE_IT_MAJIN_SWORD_BROKEN);
@@ -11099,7 +11099,7 @@ void func_80848B44(PlayState* play, Player* this) {
             shockScale = 40;
         }
 
-        randBodyPart = this->bodyPartsPos + (s32)Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
+        randBodyPart = this->bodyPartsPos + (s32)Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
         shockPos.x = (Rand_CenteredFloat(5.0f) + randBodyPart->x) - this->actor.world.pos.x;
         shockPos.y = (Rand_CenteredFloat(5.0f) + randBodyPart->y) - this->actor.world.pos.y;
         shockPos.z = (Rand_CenteredFloat(5.0f) + randBodyPart->z) - this->actor.world.pos.z;
@@ -11137,7 +11137,7 @@ void func_80848C74(PlayState* play, Player* this) {
 
     func_8083819C(this, play);
 
-    for (i = 0; i < PLAYER_BODYPART_MAX; i++, timerPtr++) {
+    for (i = 0; i < (LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX); i++, timerPtr++) {
         timerStep = sp58 + sp54;
 
         if (*timerPtr <= timerStep) {
@@ -11572,9 +11572,10 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
         this->unk_684 = NULL;
 
         phi_f12 =
-            ((this->bodyPartsPos[PLAYER_BODYPART_L_FOOT].y + this->bodyPartsPos[PLAYER_BODYPART_R_FOOT].y) * 0.5f) +
-            temp_f0;
-        temp_f0 += this->bodyPartsPos[PLAYER_BODYPART_HEAD].y + 10.0f;
+            ((this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_FOOT : PLAYER_WOLF_BODYPART_L_PAW)].y + 
+            this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_FOOT : PLAYER_WOLF_BODYPART_R_PAW)].y) * 0.5f) +
+            temp_f0; // sets the lower bounds of the hurtbox to an average of the feet y position
+        temp_f0 += this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)].y + 10.0f; // sets the upper bounds of the hurtbox to the head
 
         this->cylinder.dim.height = temp_f0 - phi_f12;
 
@@ -11609,7 +11610,7 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
     }
 
     Math_Vec3f_Copy(&this->actor.home.pos, &this->actor.world.pos);
-    Math_Vec3f_Copy(&this->unk_A88, &this->bodyPartsPos[PLAYER_BODYPART_WAIST]);
+    Math_Vec3f_Copy(&this->unk_A88, &this->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST]);  // copies current position to last position for water ripple effect while swimming
 
     if (this->stateFlags1 & (PLAYER_STATE1_7 | PLAYER_STATE1_28 | PLAYER_STATE1_29)) {
         this->actor.colChkInfo.mass = MASS_IMMOVABLE;
@@ -13338,14 +13339,15 @@ void Player_Action_8084E3C4(Player* this, PlayState* play) {
         gSaveContext.natureAmbienceId = NATURE_ID_DISABLED;
     }
 }
-
+// deku nut use action
 void Player_Action_8084E604(Player* this, PlayState* play) {
     if (LinkAnimation_Update(play, &this->skelAnime)) {
         func_8083A098(this, &gPlayerAnim_link_normal_light_bom_end, play);
     } else if (LinkAnimation_OnFrame(&this->skelAnime, 3.0f)) {
         Inventory_ChangeAmmo(ITEM_DEKU_NUT, -1);
-        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ARROW, this->bodyPartsPos[PLAYER_BODYPART_R_HAND].x,
-                    this->bodyPartsPos[PLAYER_BODYPART_R_HAND].y, this->bodyPartsPos[PLAYER_BODYPART_R_HAND].z, 4000,
+        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ARROW, this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_JAW)].x,
+                    this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_JAW)].y, 
+                    this->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_JAW)].z, 4000,
                     this->actor.shape.rot.y, 0, ARROW_NUT);
         func_80832698(this, NA_SE_VO_LI_SWORD_N);
     }

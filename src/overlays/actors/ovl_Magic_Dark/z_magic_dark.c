@@ -185,7 +185,7 @@ void MagicDark_OrbUpdate(Actor* thisx, PlayState* play) {
         Actor_SetScale(&this->actor, thisx->scale.x);
     } else if (this->timer < 55) {
         Actor_SetScale(&this->actor, thisx->scale.x * 0.9f);
-        Math_SmoothStepToF(&this->orbOffset.y, player->bodyPartsPos[PLAYER_BODYPART_WAIST].y, 0.5f, 3.0f, 1.0f);
+        Math_SmoothStepToF(&this->orbOffset.y, player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y, 0.5f, 3.0f, 1.0f);
         if (this->timer > 48) {
             MagicDark_DimLighting(play, (54 - this->timer) * 0.2f);
         }
@@ -214,13 +214,13 @@ void MagicDark_DiamondDraw(Actor* thisx, PlayState* play) {
         Player* player = GET_PLAYER(play);
         f32 heightDiff;
 
-        this->actor.world.pos.x = player->bodyPartsPos[PLAYER_BODYPART_WAIST].x;
-        this->actor.world.pos.z = player->bodyPartsPos[PLAYER_BODYPART_WAIST].z;
-        heightDiff = player->bodyPartsPos[PLAYER_BODYPART_WAIST].y - this->actor.world.pos.y;
+        this->actor.world.pos.x = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x;
+        this->actor.world.pos.z = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z;
+        heightDiff = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y - this->actor.world.pos.y;
         if (heightDiff < -2.0f) {
-            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_BODYPART_WAIST].y + 2.0f;
+            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y + 2.0f;
         } else if (heightDiff > 2.0f) {
-            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_BODYPART_WAIST].y - 2.0f;
+            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y - 2.0f;
         }
         Matrix_Translate(this->actor.world.pos.x, this->actor.world.pos.y, this->actor.world.pos.z, MTXMODE_NEW);
         Matrix_Scale(this->actor.scale.x, this->actor.scale.y, this->actor.scale.z, MTXMODE_APPLY);
@@ -248,11 +248,14 @@ void MagicDark_OrbDraw(Actor* thisx, PlayState* play) {
 
     if (this->timer < 32) {
         pos.x =
-            (player->bodyPartsPos[PLAYER_BODYPART_L_HAND].x + player->bodyPartsPos[PLAYER_BODYPART_R_HAND].x) * 0.5f;
+            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].x + 
+            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].x) * 0.5f;
         pos.y =
-            (player->bodyPartsPos[PLAYER_BODYPART_L_HAND].y + player->bodyPartsPos[PLAYER_BODYPART_R_HAND].y) * 0.5f;
+            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].y + 
+            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].y) * 0.5f;
         pos.z =
-            (player->bodyPartsPos[PLAYER_BODYPART_L_HAND].z + player->bodyPartsPos[PLAYER_BODYPART_R_HAND].z) * 0.5f;
+            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].z + 
+            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].z) * 0.5f;
         if (this->timer > 20) {
             pos.y += (this->timer - 20) * 1.4f;
         }

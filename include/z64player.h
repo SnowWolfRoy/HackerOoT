@@ -140,6 +140,8 @@ typedef enum {
     /* 0x43 */ PLAYER_IA_MAX
 } PlayerItemAction;
 
+#define IS_LIMB(index, adult, child) ((index) == (LINK_IS_ADULT ? (adult) : (child)))
+
 typedef enum {  // look at sUpperBodyLimbCopyMap
     /* 0x00 */ PLAYER_ADULT_LIMB_NONE,
     /* 0x01 */ PLAYER_ADULT_LIMB_ROOT, // used in OverrideLimbDrawGameplayCommon, doesn't deform, has no BODYPART equivalent

@@ -93,6 +93,8 @@ u64 gLinkChildBeltClaspTex[] = {
 #include "assets/objects/object_link_child/belt_clasp.ci8.inc.c"
 };
 
+// Vtx object_link_childVtx_006A80[] = { ... }
+
 u64 gLinkChildFairyOcarinaTex[] = {
 #include "assets/objects/object_link_child/fairy_ocarina.rgba16.inc.c"
 };
@@ -164,6 +166,18 @@ u64 gLinkChildMasterSwordEmblemTex[] = {
 Vtx object_link_childVtx_00ABF0[] = {
 #include "assets/objects/object_link_child/object_link_childVtx_00ABF0.vtx.inc"
 };
+
+// Vtx object_link_childVtx_018758[] = { ... }
+// Vtx object_link_childVtx_01A038[] = { ... }
+// Vtx object_link_childVtx_01A698[] = { ... }
+// Vtx object_link_childVtx_01AD18[] = { ... }
+// Vtx object_link_childVtx_01C978[] = { ... }
+// Vtx object_link_childVtx_01EDA8[] = { ... }
+// Vtx object_link_childVtx_01F528[] = { ... }
+// Vtx object_link_childVtx_01FE08[] = { ... }
+// Vtx object_link_childVtx_022148[] = { ... }
+// Vtx object_link_childVtx_022208[] = { ... }
+// Mtx gLinkChildDekuShieldMtx = { ... }
 
 u64 gLinkChildSpookyMaskTex[] = {
 #include "assets/objects/object_link_child/spooky_mask.ia16.inc.c"
@@ -249,6 +263,8 @@ u64 gLinkChildGerudoMaskNoseTex[] = {
 #include "assets/objects/object_link_child/gerudo_mask_nose.rgba16.inc.c"
 };
 
+// Vtx object_link_childVtx_029220[] = { ... }
+
 u64 gLinkChildBunnyHoodEyeTex[] = {
 #include "assets/objects/object_link_child/bunny_hood_eye.rgba16.inc.c"
 };
@@ -260,3 +276,5 @@ u64 gLinkChildBunnyHoodTex[] = {
 u64 gLinkChildBunnyHoodEarTex[] = {
 #include "assets/objects/object_link_child/bunny_hood_ear.rgba16.inc.c"
 };
+
+// Vtx object_link_childVtx_02C428[] = { ... }

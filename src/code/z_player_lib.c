@@ -8,7 +8,7 @@ typedef struct {
     /* 0x04 */ Vec3f pos;
 } BowSlingshotStringData; // size = 0x10
 
-FlexSkeletonHeader* gPlayerSkelHeaders[] = { &gLinkAdultSkel, &gLinkWolfSkel };
+FlexSkeletonHeader* gPlayerSkelHeaders[] = { &gLinkAdultSkel, &gLinkChildSkel };
 
 s16 sBootData[PLAYER_BOOTS_MAX][17] = {
     { 200, 1000, 300, 700, 550, 270, 600, 350, 800, 600, -100, 600, 590, 750, 125, 200, 130 }, // Kokiri Boots Adult (600)
@@ -1053,7 +1053,7 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
                                           void* thisx) {
     Player* this = (Player*)thisx;
 
-    if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_ROOT, PLAYER_WOLF_LIMB_ROOT)) {
+    if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_ROOT, PLAYER_WOLF_LIMB_ROOT)) {
         sLeftHandType = this->leftHandType;
         sRightHandType = this->rightHandType;
 
@@ -1092,13 +1092,13 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
             sCurBodyPartPos++;
         }
 
-        if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_HEAD, PLAYER_WOLF_LIMB_NECK)) {
+        if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_HEAD, PLAYER_WOLF_LIMB_NECK)) {
             // rotations based on Z-target? head looks at target
             // play with `rot->y` value to try and tilt it the other way, look at girl above kokiri shop
             rot->x += this->unk_6BA;
             rot->y -= this->unk_6B8;
             rot->z += this->unk_6B6;
-        } else if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_UPPER, PLAYER_WOLF_LIMB_UPPER)) {
+        } else if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_UPPER, PLAYER_WOLF_LIMB_UPPER)) {
             // this is rotating link's upper body to blend the animation when running for ex
             if (this->unk_6B0 != 0) {
                 Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
@@ -1206,6 +1206,7 @@ s32 Player_OverrideLimbDrawGameplayFirstPerson(PlayState* play, s32 limbIndex, G
                                                void* thisx) {
     Player* this = (Player*)thisx;
 
+// TODO: Come back to this; not right for child
     if (!Player_OverrideLimbDrawGameplayCommon(play, limbIndex, dList, pos, rot, thisx)) {
         if (this->unk_6AD != 2) {
             *dList = NULL;
@@ -1476,7 +1477,7 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         Matrix_MultVec3f(&sZeroVec, sCurBodyPartPos);
     }
 
-    if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
+    if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_L_HAND, PLAYER_WOLF_LIMB_L_PAD)) {
         MtxF sp14C;
         Actor* hookedActor;
 
@@ -1555,7 +1556,7 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
                 Matrix_MtxFToYXZRotS(&this->mf_9E0, &this->unk_3BC, 0);
             }
         }
-    } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
+    } else if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_R_HAND, PLAYER_WOLF_LIMB_R_PAD)) {
         Actor* heldActor = this->heldActor;
 
         if (this->rightHandType == PLAYER_MODELTYPE_RH_FF) {
@@ -1634,9 +1635,10 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
                     (this->exchangeItemId != EXCH_ITEM_NONE)) {
                     Math_Vec3f_Copy(&sGetItemRefPos, &this->leftHandPos);
                 } else {  // this sets reference position for getitem based on average of both hand positions
-                    sGetItemRefPos.x = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].x + this->leftHandPos.x) * 0.5f;
-                    sGetItemRefPos.y = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].y + this->leftHandPos.y) * 0.5f;
-                    sGetItemRefPos.z = (this->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].z + this->leftHandPos.z) * 0.5f;
+                    s32 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
+                    sGetItemRefPos.x = (this->bodyPartsPos[bodyPartRHandIndex].x + this->leftHandPos.x) * 0.5f;
+                    sGetItemRefPos.y = (this->bodyPartsPos[bodyPartRHandIndex].y + this->leftHandPos.y) * 0.5f;
+                    sGetItemRefPos.z = (this->bodyPartsPos[bodyPartRHandIndex].z + this->leftHandPos.z) * 0.5f;
                 }
 
                 if (this->unk_862 == 0) {
@@ -1645,25 +1647,27 @@ void Player_PostLimbDrawGameplay(PlayState* play, s32 limbIndex, Gfx** dList, Ve
             }
         }
     } else if (this->actor.scale.y >= 0.0f) {
-        if (limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
+        // TODO: Decide which limb to attach stuff to (shield?) when sheathed.
+        if (LINK_IS_ADULT && limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
             if ((this->rightHandType != PLAYER_MODELTYPE_RH_SHIELD) &&
                 (this->rightHandType != PLAYER_MODELTYPE_RH_FF)) {
                 if (Player_IsChildWithHylianShield(this)) {
                     Player_UpdateShieldCollider(play, this, &this->shieldQuad, sSheathLimbModelShieldQuadVertices);
                 }
 
-               // Matrix_TranslateRotateZYX(&sSheathLimbModelShieldOnBackPos, &sSheathLimbModelShieldOnBackZyxRot);
+                Matrix_TranslateRotateZYX(&sSheathLimbModelShieldOnBackPos, &sSheathLimbModelShieldOnBackZyxRot);
                 Matrix_Get(&this->shieldMf);
             }
-        } else if (limbIndex == PLAYER_ADULT_LIMB_HEAD) {
+        } else if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_HEAD, PLAYER_WOLF_LIMB_NECK)) {
             Matrix_MultVec3f(&sPlayerFocusHeadLimbModelPos, &this->actor.focus.pos);
         } else {
             Vec3f* footPos = &sLeftRightFootLimbModelFootPos[((void)0, gSaveContext.save.linkAge)];
 
             // The same model position is used for both feet,
             // but the resulting world position will be different for each limb.
-            Actor_SetFeetPos(&this->actor, limbIndex, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_L_FOOT : PLAYER_WOLF_LIMB_L_FOOT), 
-            footPos, (LINK_IS_ADULT ? PLAYER_ADULT_LIMB_R_FOOT : PLAYER_WOLF_LIMB_R_FOOT), footPos);
+            s32 limbLFootIndex = LINK_AGE_VALUE(PLAYER_ADULT_LIMB_L_FOOT, PLAYER_WOLF_LIMB_L_PAW);
+            s32 limbRFootIndex = LINK_AGE_VALUE(PLAYER_ADULT_LIMB_R_FOOT, PLAYER_WOLF_LIMB_R_PAW);
+            Actor_SetFeetPos(&this->actor, limbIndex, limbLFootIndex, footPos, limbRFootIndex, footPos);
         }
     }
 }
@@ -1709,6 +1713,7 @@ s32 Player_OverrideLimbDrawPause(PlayState* play, s32 limbIndex, Gfx** dList, Ve
     s32 dListOffset = 0;
     Gfx** dLists;
 
+    // TODO: Fix for wolf link
     if (!LINK_IS_ADULT) {
         return false;
     }
@@ -1718,24 +1723,25 @@ s32 Player_OverrideLimbDrawPause(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         modelGroup = PLAYER_MODELGROUP_CHILD_HYLIAN_SHIELD;
     }
 
-    if (limbIndex == PLAYER_ADULT_LIMB_L_HAND) {
+    if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_L_HAND, PLAYER_WOLF_LIMB_L_PAD)) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_LEFT_HAND];
         sLeftHandType = type;
         if ((type == PLAYER_MODELTYPE_LH_BGS) && (gSaveContext.save.info.playerData.swordHealth <= 0.0f)) {
             dListOffset = 4;
         }
-    } else if (limbIndex == PLAYER_ADULT_LIMB_R_HAND) {
+    } else if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_R_HAND, PLAYER_WOLF_LIMB_R_PAD)) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_RIGHT_HAND];
         sRightHandType = type;
         if (type == PLAYER_MODELTYPE_RH_SHIELD) {
             dListOffset = playerSwordAndShield[1] * 4;
         }
-    } else if (limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
+    } else if (LINK_IS_ADULT && limbIndex == PLAYER_ADULT_LIMB_SHEATH) {
+        // TODO: Decide which limb to attach stuff to (shield + sword?) when sheathed.
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_SHEATH];
         if ((type == PLAYER_MODELTYPE_SHEATH_18) || (type == PLAYER_MODELTYPE_SHEATH_19)) {
             dListOffset = playerSwordAndShield[1] * 4;
         }
-    } else if (limbIndex == PLAYER_ADULT_LIMB_WAIST) {
+    } else if (limbIndex == LINK_AGE_VALUE(PLAYER_ADULT_LIMB_WAIST, PLAYER_WOLF_LIMB_WAIST)) {
         type = gPlayerModelTypes[modelGroup][PLAYER_MODELGROUPENTRY_WAIST];
     } else {
         return false;

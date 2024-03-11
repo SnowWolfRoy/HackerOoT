@@ -603,6 +603,7 @@ void func_80A0329C(EnElf* this, PlayState* play) {
     s32 pad;
     Player* player = GET_PLAYER(play);
     f32 heightDiff;
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     SkelAnime_Update(&this->skelAnime);
 
@@ -612,7 +613,7 @@ void func_80A0329C(EnElf* this, PlayState* play) {
     }
 
     func_80A0232C(this, play);
-    this->unk_28C.y = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y;
+    this->unk_28C.y = player->bodyPartsPos[bodyPartWaistIndex].y;
     func_80A02F2C(this, &this->unk_28C);
     func_80A03018(this, play);
 
@@ -734,6 +735,7 @@ void func_80A03610(EnElf* this, PlayState* play) {
 
 void func_80A03814(EnElf* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     SkelAnime_Update(&this->skelAnime);
 
@@ -761,7 +763,7 @@ void func_80A03814(EnElf* this, PlayState* play) {
     this->unk_28C.x = Math_CosS(this->unk_2AC) * this->unk_2B8;
     this->unk_28C.z = Math_SinS(this->unk_2AC) * -this->unk_2B8;
     this->unk_2AC += this->unk_2B0;
-    func_80A02E30(this, &player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST]);
+    func_80A02E30(this, &player->bodyPartsPos[bodyPartWaistIndex]);
     this->unk_2BC = Math_Atan2S(this->actor.velocity.z, this->actor.velocity.x);
     EnElf_SpawnSparkles(this, play, 32);
     Actor_PlaySfx(&this->actor, NA_SE_EV_FIATY_HEAL - SFX_FLAG);
@@ -769,6 +771,7 @@ void func_80A03814(EnElf* this, PlayState* play) {
 
 void func_80A03990(EnElf* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     SkelAnime_Update(&this->skelAnime);
 
@@ -785,7 +788,7 @@ void func_80A03990(EnElf* this, PlayState* play) {
         this->unk_2B8 = 1.0f;
     }
 
-    func_80A02E30(this, &player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST]);
+    func_80A02E30(this, &player->bodyPartsPos[bodyPartWaistIndex]);
     Actor_SetScale(&this->actor, (1.0f - (SQ(this->unk_2B4) * SQ(1.0f / 9.0f))) * 0.008f);
     this->unk_2BC = Math_Atan2S(this->actor.velocity.z, this->actor.velocity.x);
     EnElf_SpawnSparkles(this, play, 32);
@@ -841,6 +844,7 @@ void func_80A03CF8(EnElf* this, PlayState* play) {
     Actor* arrowPointedActor;
     f32 xScale;
     f32 distFromPlayerHat;
+    s16 bodyPartHatIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_HAT, PLAYER_WOLF_BODYPART_HEAD);
 
     func_80A0461C(this, play);
     func_80A03AB0(this, play);
@@ -885,12 +889,12 @@ void func_80A03CF8(EnElf* this, PlayState* play) {
             }
         }
     } else {
-        distFromPlayerHat = Math_Vec3f_DistXYZ(&player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)], &this->actor.world.pos);
+        distFromPlayerHat = Math_Vec3f_DistXYZ(&player->bodyPartsPos[bodyPartHatIndex], &this->actor.world.pos);
 
         switch (this->unk_2A8) {
             case 7:
-                func_80A02C98(this, &player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)], 1.0f - this->unk_2AE * (1.0f / 30.0f));
-                xScale = Math_Vec3f_DistXYZ(&player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)], &this->actor.world.pos);
+                func_80A02C98(this, &player->bodyPartsPos[bodyPartHatIndex], 1.0f - this->unk_2AE * (1.0f / 30.0f));
+                xScale = Math_Vec3f_DistXYZ(&player->bodyPartsPos[bodyPartHatIndex], &this->actor.world.pos);
 
                 if (distFromPlayerHat < 7.0f) {
                     this->unk_2C0 = 0;
@@ -905,12 +909,12 @@ void func_80A03CF8(EnElf* this, PlayState* play) {
                 EnElf_SpawnSparkles(this, play, 16);
                 break;
             case 8:
-                func_80A02C98(this, &player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)], 0.2f);
-                this->actor.world.pos = player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)];
+                func_80A02C98(this, &player->bodyPartsPos[bodyPartHatIndex], 0.2f);
+                this->actor.world.pos = player->bodyPartsPos[bodyPartHatIndex];
                 func_80A029A8(this, 1);
                 break;
             case 11:
-                nextPos = player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)];
+                nextPos = player->bodyPartsPos[bodyPartHatIndex];
                 nextPos.y += 1500.0f * this->actor.scale.y;
                 func_80A02E30(this, &nextPos);
                 EnElf_SpawnSparkles(this, play, 16);
@@ -1058,6 +1062,7 @@ void func_80A0461C(EnElf* this, PlayState* play) {
     s32 temp;
     Actor* arrowPointedActor;
     Player* player = GET_PLAYER(play);
+    s16 bodyPartHatIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_HAT, PLAYER_WOLF_BODYPART_HEAD);
 
     if (play->csCtx.state != CS_STATE_IDLE) {
         if (play->csCtx.actorCues[8] != NULL) {
@@ -1176,8 +1181,8 @@ void func_80A0461C(EnElf* this, PlayState* play) {
         func_80A01C38(this, temp);
 
         if (temp == 11) {
-            this->unk_2B8 = Math_Vec3f_DistXZ(&player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)], &this->actor.world.pos);
-            this->unk_2AC = Math_Vec3f_Yaw(&this->actor.world.pos, &player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HAT : PLAYER_WOLF_BODYPART_HEAD)]);
+            this->unk_2B8 = Math_Vec3f_DistXZ(&player->bodyPartsPos[bodyPartHatIndex], &this->actor.world.pos);
+            this->unk_2AC = Math_Vec3f_Yaw(&this->actor.world.pos, &player->bodyPartsPos[bodyPartHatIndex]);
         }
     }
 }
@@ -1220,16 +1225,17 @@ void func_80A04DE4(EnElf* this, PlayState* play) {
     Vec3f headCopy;
     Player* player = GET_PLAYER(play);
     Vec3f naviRefPos;
+    s16 bodyPartHeadIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_HEAD, PLAYER_WOLF_BODYPART_NECK);
 
     if (this->fairyFlags & 0x10) {
         naviRefPos = play->actorCtx.targetCtx.naviRefPos;
 
         if ((player->unk_664 == NULL) || (&player->actor == player->unk_664) || (&this->actor == player->unk_664)) {
             naviRefPos.x =
-                player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)].x + (Math_SinS(player->actor.shape.rot.y) * 20.0f);
-            naviRefPos.y = player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)].y + 5.0f;
+                player->bodyPartsPos[bodyPartHeadIndex].x + (Math_SinS(player->actor.shape.rot.y) * 20.0f);
+            naviRefPos.y = player->bodyPartsPos[bodyPartHeadIndex].y + 5.0f;
             naviRefPos.z =
-                player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)].z + (Math_CosS(player->actor.shape.rot.y) * 20.0f);
+                player->bodyPartsPos[bodyPartHeadIndex].z + (Math_CosS(player->actor.shape.rot.y) * 20.0f);
         }
 
         this->actor.focus.pos = naviRefPos;

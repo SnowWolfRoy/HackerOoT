@@ -63,6 +63,7 @@ void EnMThunder_Init(Actor* thisx, PlayState* play2) {
     PlayState* play = play2;
     EnMThunder* this = (EnMThunder*)thisx;
     Player* player = GET_PLAYER(play);
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     Collider_InitCylinder(play, &this->collider);
     Collider_SetCylinder(play, &this->collider, &this->actor, &D_80AA0420);
@@ -75,7 +76,7 @@ void EnMThunder_Init(Actor* thisx, PlayState* play2) {
     this->collider.dim.yShift = -20;
     this->unk_1C4 = 8;
     this->unk_1B4 = 0.0f;
-    this->actor.world.pos = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST];
+    this->actor.world.pos = player->bodyPartsPos[bodyPartWaistIndex];
     this->unk_1AC = 0.0f;
     this->unk_1BC = 0.0f;
     this->actor.shape.rot.y = player->actor.shape.rot.y + 0x8000;
@@ -150,9 +151,10 @@ void func_80A9F350(EnMThunder* this, PlayState* play) {
 void func_80A9F408(EnMThunder* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     Actor* child = this->actor.child;
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     this->unk_1B8 = player->unk_858;
-    this->actor.world.pos = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST];
+    this->actor.world.pos = player->bodyPartsPos[bodyPartWaistIndex];
     this->actor.shape.rot.y = player->actor.shape.rot.y + 0x8000;
 
     if (this->unk_1CA == 0) {
@@ -271,6 +273,7 @@ void func_80A9F938(EnMThunder* this, PlayState* play) {
 
 void func_80A9F9B4(EnMThunder* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     if (Math_StepToF(&this->unk_1AC, 0.0f, 1 / 16.0f)) {
         Actor_Kill(&this->actor);
@@ -283,8 +286,8 @@ void func_80A9F9B4(EnMThunder* this, PlayState* play) {
     }
 
     if (this->unk_1C4 > 0) {
-        this->actor.world.pos.x = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x;
-        this->actor.world.pos.z = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z;
+        this->actor.world.pos.x = player->bodyPartsPos[bodyPartWaistIndex].x;
+        this->actor.world.pos.z = player->bodyPartsPos[bodyPartWaistIndex].z;
         this->unk_1C4--;
     }
 

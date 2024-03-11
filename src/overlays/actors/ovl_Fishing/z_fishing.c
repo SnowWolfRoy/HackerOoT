@@ -2919,6 +2919,7 @@ void Fishing_UpdateFish(Actor* thisx, PlayState* play2) {
     f32 rumbleStrength;
     u16 attempts;
     u8 rumbleStrength8;
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
     this->actor.uncullZoneForward = 700.0f;
     this->actor.uncullZoneScale = 50.0f;
@@ -3909,11 +3910,11 @@ void Fishing_UpdateFish(Actor* thisx, PlayState* play2) {
             multiVecSrc.y = -10.0f;
             multiVecSrc.z = 5.0f;
             Matrix_MultVec3f(&multiVecSrc, &targetPosOffset);
-            Math_ApproachF(&this->actor.world.pos.x, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].x + targetPosOffset.x,
+            Math_ApproachF(&this->actor.world.pos.x, player->bodyPartsPos[bodyPartRHandIndex].x + targetPosOffset.x,
                            1.0f, 6.0f);
-            Math_ApproachF(&this->actor.world.pos.y, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].y + targetPosOffset.y,
+            Math_ApproachF(&this->actor.world.pos.y, player->bodyPartsPos[bodyPartRHandIndex].y + targetPosOffset.y,
                            1.0f, 6.0f);
-            Math_ApproachF(&this->actor.world.pos.z, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].z + targetPosOffset.z,
+            Math_ApproachF(&this->actor.world.pos.z, player->bodyPartsPos[bodyPartRHandIndex].z + targetPosOffset.z,
                            1.0f, 6.0f);
 
             sRodLineSpooled = 188.0f;

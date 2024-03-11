@@ -389,8 +389,9 @@ void BossTw_AddShieldDeflectEffect(PlayState* play, f32 arg1, s16 arg2) {
     s16 j;
     BossTwEffect* eff;
     Player* player = GET_PLAYER(play);
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
-    sShieldHitPos = player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND];
+    sShieldHitPos = player->bodyPartsPos[bodyPartRHandIndex];
     sShieldHitYaw = player->actor.shape.rot.y;
 
     for (i = 0; i < 8; i++) {
@@ -419,8 +420,9 @@ void BossTw_AddShieldHitEffect(PlayState* play, f32 arg1, s16 arg2) {
     s16 j;
     BossTwEffect* eff;
     Player* player = GET_PLAYER(play);
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
-    sShieldHitPos = player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND];
+    sShieldHitPos = player->bodyPartsPos[bodyPartRHandIndex];
     sShieldHitYaw = player->actor.shape.rot.y;
 
     for (i = 0; i < 8; i++) {
@@ -812,7 +814,7 @@ s32 BossTw_BeamHitPlayerCheck(BossTw* this, PlayState* play) {
                     sFreezeState = 1;
                 }
             } else if (!player->isBurning) {
-                for (i = 0; i < (LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX); i++) {
+                for (i = 0; i < PLAYER_BODYPART_MAX; i++) {
                     player->flameTimers[i] = Rand_S16Offset(0, 200);
                 }
 
@@ -971,6 +973,7 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     BossTw* otherTw = (BossTw*)this->actor.parent;
     Input* input = &play->state.input[0];
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
     Math_ApproachF(&this->actor.world.pos.y, 400.0f, 0.05f, this->actor.speed);
     Math_ApproachF(&this->actor.speed, 5.0f, 1.0f, 0.25f);
@@ -982,9 +985,9 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
         if ((player->stateFlags1 & PLAYER_STATE1_22) &&
             ((s16)((player->actor.shape.rot.y - this->actor.shape.rot.y) + 0x8000) < 0x2000) &&
             ((s16)((player->actor.shape.rot.y - this->actor.shape.rot.y) + 0x8000) > -0x2000)) {
-            Math_ApproachF(&this->targetPos.x, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].x, 1.0f, 400.0f);
-            Math_ApproachF(&this->targetPos.y, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].y, 1.0f, 400.0f);
-            Math_ApproachF(&this->targetPos.z, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].z, 1.0f, 400.0f);
+            Math_ApproachF(&this->targetPos.x, player->bodyPartsPos[bodyPartRHandIndex].x, 1.0f, 400.0f);
+            Math_ApproachF(&this->targetPos.y, player->bodyPartsPos[bodyPartRHandIndex].y, 1.0f, 400.0f);
+            Math_ApproachF(&this->targetPos.z, player->bodyPartsPos[bodyPartRHandIndex].z, 1.0f, 400.0f);
         } else {
             Math_ApproachF(&this->targetPos.x, player->actor.world.pos.x, 1.0f, 400.0f);
             Math_ApproachF(&this->targetPos.y, player->actor.world.pos.y + 30.0f, 1.0f, 400.0f);
@@ -1102,7 +1105,7 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
                             velocity.x = Rand_CenteredFloat(15.0f);
                             velocity.y = Rand_CenteredFloat(15.0f);
                             velocity.z = Rand_CenteredFloat(15.0f);
-                            pos = player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND];
+                            pos = player->bodyPartsPos[bodyPartRHandIndex];
                             BossTw_AddDotEffect(play, &pos, &velocity, &accel, (s16)Rand_ZeroFloat(2.0f) + 5,
                                                 this->actor.params, 150);
                         }
@@ -1147,11 +1150,11 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
 
                     this->beamDist = sqrtf(SQ(xDiff) + SQ(yDiff) + SQ(zDiff));
                     Math_ApproachF(&this->beamReflectionDist, 2000.0f, 1.0f, 40.0f);
-                    Math_ApproachF(&this->targetPos.x, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].x, 1.0f, 400.0f);
-                    Math_ApproachF(&this->targetPos.y, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].y, 1.0f, 400.0f);
-                    Math_ApproachF(&this->targetPos.z, player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND].z, 1.0f, 400.0f);
+                    Math_ApproachF(&this->targetPos.x, player->bodyPartsPos[bodyPartRHandIndex].x, 1.0f, 400.0f);
+                    Math_ApproachF(&this->targetPos.y, player->bodyPartsPos[bodyPartRHandIndex].y, 1.0f, 400.0f);
+                    Math_ApproachF(&this->targetPos.z, player->bodyPartsPos[bodyPartRHandIndex].z, 1.0f, 400.0f);
                     if ((this->work[CS_TIMER_1] % 4) == 0) {
-                        BossTw_AddRingEffect(play, &player->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND], 0.5f, 3.0f, 0xFF,
+                        BossTw_AddRingEffect(play, &player->bodyPartsPos[bodyPartRHandIndex], 0.5f, 3.0f, 0xFF,
                                              this->actor.params, 1, BOSS_TW_EFFECT_COUNT);
                     }
                 } else {
@@ -3912,6 +3915,7 @@ void BossTw_BlastFire(BossTw* this, PlayState* play) {
     f32 distXZ;
     Player* player = GET_PLAYER(play);
     Player* player2 = player;
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
     switch (this->actor.params) {
         case TW_FIRE_BLAST:
@@ -3947,7 +3951,7 @@ void BossTw_BlastFire(BossTw* this, PlayState* play) {
                         Vec3s blastDir;
                         s16 alpha;
 
-                        this->actor.world.pos = player2->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND];
+                        this->actor.world.pos = player2->bodyPartsPos[bodyPartRHandIndex];
                         this->actor.world.pos.y = -2000.0f;
                         Matrix_MtxFToYXZRotS(&player2->shieldMf, &blastDir, 0);
                         blastDir.x = -blastDir.x;
@@ -3973,7 +3977,7 @@ void BossTw_BlastFire(BossTw* this, PlayState* play) {
                             alpha = this->timers[0] * 10;
                             alpha = CLAMP_MAX(alpha, 255);
 
-                            BossTw_AddShieldBlastEffect(play, &player2->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND], &velocity,
+                            BossTw_AddShieldBlastEffect(play, &player2->bodyPartsPos[bodyPartRHandIndex], &velocity,
                                                         &sZeroVector, 10.0f, 80.0f, alpha, 1);
                         }
 
@@ -4102,6 +4106,7 @@ void BossTw_BlastIce(BossTw* this, PlayState* play) {
     f32 xzDist;
     Player* player = GET_PLAYER(play);
     Player* player2 = player;
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
     switch (this->actor.params) {
         case TW_ICE_BLAST:
@@ -4136,7 +4141,7 @@ void BossTw_BlastIce(BossTw* this, PlayState* play) {
                         Vec3s reflDir;
                         s16 alpha;
 
-                        this->actor.world.pos = player2->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND];
+                        this->actor.world.pos = player2->bodyPartsPos[bodyPartRHandIndex];
                         this->actor.world.pos.y = -2000.0f;
                         Matrix_MtxFToYXZRotS(&player2->shieldMf, &reflDir, 0);
                         reflDir.x = -reflDir.x;
@@ -4162,7 +4167,7 @@ void BossTw_BlastIce(BossTw* this, PlayState* play) {
                             alpha = this->timers[0] * 10;
                             alpha = CLAMP_MAX(alpha, 255);
 
-                            BossTw_AddShieldBlastEffect(play, &player2->bodyPartsPos[PLAYER_ADULT_BODYPART_R_HAND], &velocity,
+                            BossTw_AddShieldBlastEffect(play, &player2->bodyPartsPos[bodyPartRHandIndex], &velocity,
                                                         &sZeroVector, 10.0f, 80.0f, alpha, 0);
                         }
 
@@ -4834,7 +4839,7 @@ void BossTw_UpdateEffects(PlayState* play) {
                     }
 
                     if ((eff->workf[EFF_DIST] > 0.4f) && ((eff->frame & 7) == 0)) {
-                        spA6 = Rand_ZeroFloat((LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_MAX : PLAYER_WOLF_BODYPART_MAX) - 0.1f);
+                        spA6 = Rand_ZeroFloat(PLAYER_BODYPART_MAX - 0.1f);
 
                         if (eff->target == NULL) {
                             spC0.x = player->bodyPartsPos[spA6].x + Rand_CenteredFloat(5.0f);

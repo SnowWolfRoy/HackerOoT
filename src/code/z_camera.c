@@ -4697,7 +4697,7 @@ s32 Camera_Unique1(Camera* camera) {
         camera->playerToAtOffset.y -= camera->playerPosDelta.y;
         rwData->yawTarget = eyeNextAtOffset.yaw;
         rwData->unk_00 = 0.0f;
-        playerWaistPos = camera->player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST];
+        playerWaistPos = camera->player->bodyPartsPos[LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST)];
         OLib_Vec3fDiffToVecGeo(&unk908PlayerPosOffset, &playerPosRot->pos, &playerWaistPos);
         rwData->timer = R_CAM_DEFAULT_ANIM_TIME;
         rwData->yawTargetAdj = ABS((s16)(unk908PlayerPosOffset.yaw - eyeAtOffset.yaw)) < 0x3A98

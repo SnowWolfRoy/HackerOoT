@@ -1053,7 +1053,7 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
                                           void* thisx) {
     Player* this = (Player*)thisx;
 
-    if (limbIndex == PLAYER_WOLF_LIMB_ROOT) {
+    if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_ROOT, PLAYER_WOLF_LIMB_ROOT)) {
         sLeftHandType = this->leftHandType;
         sRightHandType = this->rightHandType;
 
@@ -1092,63 +1092,47 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
             sCurBodyPartPos++;
         }
 
-        if (LINK_IS_ADULT) {
-
-            if (limbIndex == PLAYER_ADULT_LIMB_HEAD) {
-                rot->x += this->unk_6BA;
-                rot->y -= this->unk_6B8;
-                rot->z += this->unk_6B6;
-            } else if (limbIndex == PLAYER_ADULT_LIMB_UPPER) { // this is rotating link's upper body to blend the animation when running for ex
-                if (this->unk_6B0 != 0) {
-                    Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
-                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
-                }
-                if (this->unk_6BE != 0) {
-                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
-                }
-                if (this->unk_6BC != 0) {
-                    Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
-                }
-                if (this->unk_6C0 != 0) {
-                    Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
-                }
-            } else if (limbIndex == PLAYER_ADULT_LIMB_L_THIGH) {
-                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_ADULT_LIMB_L_THIGH, PLAYER_ADULT_LIMB_L_SHIN,
-                            PLAYER_ADULT_LIMB_L_FOOT);
+        if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_HEAD, PLAYER_WOLF_LIMB_NECK)) {
+            // rotations based on Z-target? head looks at target
+            // play with `rot->y` value to try and tilt it the other way, look at girl above kokiri shop
+            rot->x += this->unk_6BA;
+            rot->y -= this->unk_6B8;
+            rot->z += this->unk_6B6;
+        } else if (IS_LIMB(limbIndex, PLAYER_ADULT_LIMB_UPPER, PLAYER_WOLF_LIMB_UPPER)) {
+            // this is rotating link's upper body to blend the animation when running for ex
+            if (this->unk_6B0 != 0) {
+                Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
+                Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
+            }
+            if (this->unk_6BE != 0) {
+                Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
+            }
+            if (this->unk_6BC != 0) {
+                Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
+            }
+            if (this->unk_6C0 != 0) {
+                Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
+            }
+        } else if (LINK_IS_ADULT) {
+            // adjusts both legs, depending on floor
+            if (limbIndex == PLAYER_ADULT_LIMB_L_THIGH) {
+                func_8008F87C(play, this, &this->skelAnime, pos, rot,
+                              PLAYER_ADULT_LIMB_L_THIGH, PLAYER_ADULT_LIMB_L_SHIN, PLAYER_ADULT_LIMB_L_FOOT);
             } else if (limbIndex == PLAYER_ADULT_LIMB_R_THIGH) {
-                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_ADULT_LIMB_R_THIGH, PLAYER_ADULT_LIMB_R_SHIN,
-                            PLAYER_ADULT_LIMB_R_FOOT);
-
-        }} else if (LINK_IS_CHILD) { 
-            // as far as I could tell, duplicating this entire section was the only way to avoid 
-            // the wrong bones being processed on the wrong model. there may be a more elegant solution to this
-
-            if (limbIndex == PLAYER_WOLF_LIMB_NECK) { // rotations based on Z-target? head looks at target
-                rot->x += this->unk_6BA;
-                rot->y -= this->unk_6B8; // play with this value to try and tilt it the other way, look at girl above kokiri shop
-                rot->z += this->unk_6B6;
-            } else if (limbIndex == PLAYER_WOLF_LIMB_UPPER) { // this is rotating link's upper body to blend the animation when running for ex
-                if (this->unk_6B0 != 0) {
-                    Matrix_RotateZ(BINANG_TO_RAD(0x44C), MTXMODE_APPLY);
-                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6B0), MTXMODE_APPLY);
-                }
-                if (this->unk_6BE != 0) {
-                    Matrix_RotateY(BINANG_TO_RAD(this->unk_6BE), MTXMODE_APPLY);
-                }
-                if (this->unk_6BC != 0) {
-                    Matrix_RotateX(BINANG_TO_RAD(this->unk_6BC), MTXMODE_APPLY);
-                }
-                if (this->unk_6C0 != 0) {
-                    Matrix_RotateZ(BINANG_TO_RAD(this->unk_6C0), MTXMODE_APPLY);
-                }
-            } else if (limbIndex == PLAYER_WOLF_LIMB_L_THIGH) { // adjusts left leg depending on floor
-                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_WOLF_LIMB_L_THIGH, PLAYER_WOLF_LIMB_L_LEG,
-                            PLAYER_WOLF_LIMB_L_PAW);
-            } else if (limbIndex == PLAYER_WOLF_LIMB_R_THIGH) { // adjusts right leg depending on floor
-                func_8008F87C(play, this, &this->skelAnime, pos, rot, PLAYER_WOLF_LIMB_R_THIGH, PLAYER_WOLF_LIMB_R_LEG,
-                            PLAYER_WOLF_LIMB_R_PAW);
-            }} else {
-            return false;
+                func_8008F87C(play, this, &this->skelAnime, pos, rot,
+                              PLAYER_ADULT_LIMB_R_THIGH, PLAYER_ADULT_LIMB_R_SHIN, PLAYER_ADULT_LIMB_R_FOOT);
+            }
+        } else {
+            // adjusts BACK legs, depending on floor
+            // TODO: We should probably also process the front legs.
+            // TODO: We should probably also manipulate PLAYER_WOLF_LIMB_<L/R>_FOOT.
+            if (limbIndex == PLAYER_WOLF_LIMB_L_THIGH) {
+                func_8008F87C(play, this, &this->skelAnime, pos, rot,
+                              PLAYER_WOLF_LIMB_L_THIGH, PLAYER_WOLF_LIMB_L_LEG, PLAYER_WOLF_LIMB_L_PAW);
+            } else if (limbIndex == PLAYER_WOLF_LIMB_R_THIGH) {
+                func_8008F87C(play, this, &this->skelAnime, pos, rot,
+                              PLAYER_WOLF_LIMB_R_THIGH, PLAYER_WOLF_LIMB_R_LEG, PLAYER_WOLF_LIMB_R_PAW);
+            }
         }
     }
 

@@ -200,6 +200,7 @@ s32 Ge2_DetectPlayerInUpdate(PlayState* play, EnGe2* this, Vec3f* pos, s16 yRot,
     Vec3f posResult;
     CollisionPoly* outPoly;
     f32 visionScale;
+    s16 bodyPartHeadIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_HEAD, PLAYER_WOLF_BODYPART_NECK);
 
     visionScale = (!IS_DAY ? 0.75f : 1.5f);
 
@@ -215,8 +216,7 @@ s32 Ge2_DetectPlayerInUpdate(PlayState* play, EnGe2* this, Vec3f* pos, s16 yRot,
         return 0;
     }
 
-    if (BgCheck_AnyLineTest1(&play->colCtx, pos, &player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_HEAD : PLAYER_WOLF_BODYPART_HEAD)], &posResult, &outPoly,
-                             0)) {
+    if (BgCheck_AnyLineTest1(&play->colCtx, pos, &player->bodyPartsPos[bodyPartHeadIndex], &posResult, &outPoly, 0)) {
         return 0;
     }
     return 1;

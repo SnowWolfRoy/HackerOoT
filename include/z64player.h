@@ -140,7 +140,13 @@ typedef enum {
     /* 0x43 */ PLAYER_IA_MAX
 } PlayerItemAction;
 
-#define IS_LIMB(index, adult, child) ((index) == (LINK_IS_ADULT ? (adult) : (child)))
+// Use 'MAX' when you want the max number of limbs for the current age.
+// Use 'ARR_COUNT' when you want the max number of limbs for all ages.
+#define PLAYER_LIMB_MAX LINK_AGE_VALUE(PLAYER_ADULT_LIMB_MAX, PLAYER_WOLF_LIMB_MAX)
+#define PLAYER_LIMB_ARR_COUNT MAX((s16)PLAYER_ADULT_LIMB_MAX, (s16)PLAYER_WOLF_LIMB_MAX)
+
+#define LIMB_BUF_COUNT(limbCount) ((ALIGN16((limbCount) * sizeof(Vec3s)) + sizeof(Vec3s) - 1) / sizeof(Vec3s))
+#define PLAYER_LIMB_BUF_COUNT LIMB_BUF_COUNT(PLAYER_LIMB_ARR_COUNT)
 
 typedef enum {  // look at sUpperBodyLimbCopyMap
     /* 0x00 */ PLAYER_ADULT_LIMB_NONE,
@@ -199,6 +205,11 @@ typedef enum {  // look at sUpperBodyLimbCopyMap
     /* 0x1B */ PLAYER_WOLF_LIMB_R_PAD, // R_HAND
     /* 0x1C */ PLAYER_WOLF_LIMB_MAX // MAX
 } PlayerWolfLimb;
+
+// Use 'MAX' when you want the max number of body parts for the current age.
+// Use 'ARR_COUNT' when you want the max number of body parts for all ages.
+#define PLAYER_BODYPART_MAX LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_MAX, PLAYER_WOLF_BODYPART_MAX)
+#define PLAYER_BODYPART_ARR_COUNT MAX((s16)PLAYER_ADULT_BODYPART_MAX, (s16)PLAYER_WOLF_BODYPART_MAX)
 
 typedef enum {
     /* 0x00 */ PLAYER_ADULT_BODYPART_WAIST,         // PLAYER_LIMB_WAIST // used for a lof ot positioning behaviours with camera, fairies, thunder actor, water ripples etc.
@@ -412,9 +423,6 @@ typedef enum {
     /* 0x2C */ PLAYER_ANIMGROUP_nwait,
     /* 0x2D */ PLAYER_ANIMGROUP_MAX
 } PlayerAnimGroup;
-
-#define LIMB_BUF_COUNT(limbCount) ((ALIGN16((limbCount) * sizeof(Vec3s)) + sizeof(Vec3s) - 1) / sizeof(Vec3s))
-#define PLAYER_LIMB_BUF_COUNT LIMB_BUF_COUNT(PLAYER_WOLF_LIMB_MAX)
 
 typedef enum {
     /* 0x00 */ PLAYER_CSACTION_NONE,

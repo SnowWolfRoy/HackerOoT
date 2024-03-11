@@ -177,6 +177,7 @@ void MagicDark_OrbUpdate(Actor* thisx, PlayState* play) {
     MagicDark* this = (MagicDark*)thisx;
     s32 pad;
     Player* player = GET_PLAYER(play);
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     func_8002F974(&this->actor, NA_SE_PL_MAGIC_SOUL_BALL - SFX_FLAG);
     if (this->timer < 35) {
@@ -185,7 +186,7 @@ void MagicDark_OrbUpdate(Actor* thisx, PlayState* play) {
         Actor_SetScale(&this->actor, thisx->scale.x);
     } else if (this->timer < 55) {
         Actor_SetScale(&this->actor, thisx->scale.x * 0.9f);
-        Math_SmoothStepToF(&this->orbOffset.y, player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y, 0.5f, 3.0f, 1.0f);
+        Math_SmoothStepToF(&this->orbOffset.y, player->bodyPartsPos[bodyPartWaistIndex].y, 0.5f, 3.0f, 1.0f);
         if (this->timer > 48) {
             MagicDark_DimLighting(play, (54 - this->timer) * 0.2f);
         }
@@ -205,6 +206,7 @@ void MagicDark_DiamondDraw(Actor* thisx, PlayState* play) {
     MagicDark* this = (MagicDark*)thisx;
     s32 pad;
     u16 gameplayFrames = play->gameplayFrames;
+    s16 bodyPartWaistIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_WAIST, PLAYER_WOLF_BODYPART_WAIST);
 
     OPEN_DISPS(play->state.gfxCtx);
 
@@ -214,13 +216,13 @@ void MagicDark_DiamondDraw(Actor* thisx, PlayState* play) {
         Player* player = GET_PLAYER(play);
         f32 heightDiff;
 
-        this->actor.world.pos.x = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].x;
-        this->actor.world.pos.z = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].z;
-        heightDiff = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y - this->actor.world.pos.y;
+        this->actor.world.pos.x = player->bodyPartsPos[bodyPartWaistIndex].x;
+        this->actor.world.pos.z = player->bodyPartsPos[bodyPartWaistIndex].z;
+        heightDiff = player->bodyPartsPos[bodyPartWaistIndex].y - this->actor.world.pos.y;
         if (heightDiff < -2.0f) {
-            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y + 2.0f;
+            this->actor.world.pos.y = player->bodyPartsPos[bodyPartWaistIndex].y + 2.0f;
         } else if (heightDiff > 2.0f) {
-            this->actor.world.pos.y = player->bodyPartsPos[PLAYER_ADULT_BODYPART_WAIST].y - 2.0f;
+            this->actor.world.pos.y = player->bodyPartsPos[bodyPartWaistIndex].y - 2.0f;
         }
         Matrix_Translate(this->actor.world.pos.x, this->actor.world.pos.y, this->actor.world.pos.z, MTXMODE_NEW);
         Matrix_Scale(this->actor.scale.x, this->actor.scale.y, this->actor.scale.z, MTXMODE_APPLY);
@@ -245,17 +247,19 @@ void MagicDark_OrbDraw(Actor* thisx, PlayState* play) {
     Player* player = GET_PLAYER(play);
     s32 pad;
     f32 sp6C = play->state.frames & 0x1F;
+    s16 bodyPartLHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_L_HAND, PLAYER_WOLF_BODYPART_L_PAD);
+    s16 bodyPartRHandIndex = LINK_AGE_VALUE(PLAYER_ADULT_BODYPART_R_HAND, PLAYER_WOLF_BODYPART_R_PAD);
 
     if (this->timer < 32) {
         pos.x =
-            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].x + 
-            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].x) * 0.5f;
+            (player->bodyPartsPos[bodyPartLHandIndex].x +
+            player->bodyPartsPos[bodyPartRHandIndex].x) * 0.5f;
         pos.y =
-            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].y + 
-            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].y) * 0.5f;
+            (player->bodyPartsPos[bodyPartLHandIndex].y +
+            player->bodyPartsPos[bodyPartRHandIndex].y) * 0.5f;
         pos.z =
-            (player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_L_HAND : PLAYER_WOLF_BODYPART_L_PAD)].z + 
-            player->bodyPartsPos[(LINK_IS_ADULT ? PLAYER_ADULT_BODYPART_R_HAND : PLAYER_WOLF_BODYPART_R_PAD)].z) * 0.5f;
+            (player->bodyPartsPos[bodyPartLHandIndex].z +
+            player->bodyPartsPos[bodyPartRHandIndex].z) * 0.5f;
         if (this->timer > 20) {
             pos.y += (this->timer - 20) * 1.4f;
         }

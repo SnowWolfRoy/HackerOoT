@@ -32,6 +32,8 @@
 #define LINK_IS_ADULT (gSaveContext.save.linkAge == LINK_AGE_ADULT)
 #define LINK_IS_CHILD (gSaveContext.save.linkAge == LINK_AGE_CHILD)
 
+#define LINK_AGE_VALUE(adult, child) (LINK_IS_ADULT ? (adult) : (child))
+
 #define YEARS_CHILD 5
 #define YEARS_ADULT 17
 #define LINK_AGE_IN_YEARS (!LINK_IS_ADULT ? YEARS_CHILD : YEARS_ADULT)

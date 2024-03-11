@@ -59,8 +59,10 @@ static u8 D_80AFA15C[] = {
     2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 3,
 };
 
-static s8 D_80AFA16C[PLAYER_ADULT_BODYPART_MAX] = {
+static s8 D_80AFA16C[PLAYER_BODYPART_ARR_COUNT] = {
     2, 9, 10, 11, 12, 13, 14, 0, 15, -1, 3, 4, 5, 6, 7, 8, -1, 1,
+    // TODO: Figure out valid values for the following body parts.
+    -1, -1, -1, -1, -1, -1, -1, -1,
 };
 
 static Vec3f D_80AFA180[] = {
@@ -266,7 +268,7 @@ void func_80AF95C4(EnSda* this, u8* shadowTexture, Player* player, PlayState* pl
         }
     }
     Matrix_RotateX((BREG(50) + 70) / 100.0f, MTXMODE_NEW);
-    for (i = 0; i < PLAYER_ADULT_BODYPART_MAX; i++) {
+    for (i = 0; i < PLAYER_BODYPART_MAX; i++) {
         if (D_80AFA16C[i] >= 0) {
             D_80AFA660[D_80AFA16C[i]] = player->bodyPartsPos[i];
         }

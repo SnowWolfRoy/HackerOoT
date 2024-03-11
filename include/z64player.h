@@ -363,13 +363,13 @@ typedef enum {
 } PlayerModelType;
 
 typedef enum {
-    /* 0x00 */ PLAYER_ANIMTYPE_0 = 0x00,
-    /* 0x01 */ PLAYER_ANIMTYPE_1 = 0x02,
-    /* 0x02 */ PLAYER_ANIMTYPE_2 = 0x04,
-    /* 0x03 */ PLAYER_ANIMTYPE_3 = 0x06,
-    /* 0x04 */ PLAYER_ANIMTYPE_4 = 0x08,
-    /* 0x05 */ PLAYER_ANIMTYPE_5 = 0x0A,
-    /* 0x06 */ PLAYER_ANIMTYPE_MAX = 0x0C
+    /* 0x00 */ PLAYER_ANIMTYPE_0,
+    /* 0x01 */ PLAYER_ANIMTYPE_1,
+    /* 0x02 */ PLAYER_ANIMTYPE_2,
+    /* 0x03 */ PLAYER_ANIMTYPE_3,
+    /* 0x04 */ PLAYER_ANIMTYPE_4,
+    /* 0x05 */ PLAYER_ANIMTYPE_5,
+    /* 0x06 */ PLAYER_ANIMTYPE_MAX,
 } PlayerAnimType;
 
 /**

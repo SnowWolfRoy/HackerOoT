@@ -1,4 +1,5 @@
 extern LinkAnimationHeader gPlayerAnim_wolf_normal_temp;
+extern LinkAnimationHeader gPlayerAnim_wolf_normal_wait;
 
 #define TEMP_ANIM(frameCount) \
 extern LinkAnimationHeader gPlayerAnim_wolf_normal_temp_##frameCount;

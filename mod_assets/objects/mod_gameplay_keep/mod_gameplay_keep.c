@@ -8,6 +8,10 @@ LinkAnimationHeader gPlayerAnim_wolf_normal_temp = {
 	{ 55 }, gPlayerAnim_wolf_normal_tempData
 };
 
+LinkAnimationHeader gPlayerAnim_wolf_normal_wait = {
+	{ 89 }, gPlayerAnim_wolf_normal_waitData 
+};
+
 #define TEMP_ANIM(frameCount) \
 LinkAnimationHeader gPlayerAnim_wolf_normal_temp_##frameCount = { \
 	{ frameCount }, gPlayerAnim_wolf_normal_tempData \
@@ -65,12 +69,6 @@ TEMP_ANIM(52);
 TEMP_ANIM(53);
 TEMP_ANIM(54);
 TEMP_ANIM(55);
-#undef TEMP_ANIM
-// TODO: Add a temporary filler animation that has 300 frames.
-#define TEMP_ANIM(frameCount) \
-LinkAnimationHeader gPlayerAnim_wolf_normal_temp_##frameCount = { \
-	{ 55 }, gPlayerAnim_wolf_normal_tempData \
-}
 TEMP_ANIM(56);
 TEMP_ANIM(57);
 TEMP_ANIM(58);

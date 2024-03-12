@@ -1,7 +1,7 @@
 {
     "files.associations": {
-        "gameplay_keep.h": "c",
-        "object_link_boy.h": "c",
+        "*.h": "c",
+        "*.c": "c",
         "chrono": "c",
         "random": "c",
         "limits": "c",
@@ -16,8 +16,5 @@
         "type_traits": "c",
         "utility": "c",
         "compare": "c",
-        "link_animetion.h": "c",
-        "wolf_animetion.h": "c",
-        "object_link_child.h": "c"
     }
 }

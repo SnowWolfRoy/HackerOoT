@@ -774,7 +774,7 @@ static GetItemEntry sGetItemTable[] = {
 
 static LinkAnimationHeader* sLinkPlayerAnimations[PLAYER_ANIMGROUP_MAX][PLAYER_ANIMTYPE_MAX][2] = {
     [PLAYER_ANIMGROUP_wait] = {
-        { &gPlayerAnim_link_normal_wait_free,                &gLinkWolfWaitAnim },
+        { &gPlayerAnim_link_normal_wait_free,                &gLinkWolfWaitAnim }, // standing idle
         { &gPlayerAnim_link_normal_wait,                     &gLinkWolfWaitAnim },
         { &gPlayerAnim_link_normal_wait,                     &gLinkWolfWaitAnim },
         { &gPlayerAnim_link_fighter_wait_long,               &gLinkWolfWaitAnim },
@@ -782,23 +782,23 @@ static LinkAnimationHeader* sLinkPlayerAnimations[PLAYER_ANIMGROUP_MAX][PLAYER_A
         { &gPlayerAnim_link_normal_wait_free,                &gLinkWolfWaitAnim },
     },
     [PLAYER_ANIMGROUP_walk] = {
-        { &gPlayerAnim_link_normal_walk_free,                &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_walk,                     &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_walk,                     &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_fighter_walk_long,               &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_walk_free,                &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_walk_free,                &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_walk_free,                &gLinkWolfWalkAnim }, // default walking
+        { &gPlayerAnim_link_normal_walk,                     &gLinkWolfWalkAnim },
+        { &gPlayerAnim_link_normal_walk,                     &gLinkWolfWalkAnim },
+        { &gPlayerAnim_link_fighter_walk_long,               &gLinkWolfWalkAnim },
+        { &gPlayerAnim_link_normal_walk_free,                &gLinkWolfWalkAnim },
+        { &gPlayerAnim_link_normal_walk_free,                &gLinkWolfWalkAnim },
     },
     [PLAYER_ANIMGROUP_run] = {
-        { &gPlayerAnim_link_normal_run_free,                 &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_fighter_run,                     &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_run,                      &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_fighter_run_long,                &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_run_free,                 &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_run_free,                 &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_run_free,                 &gLinkWolfRunAnim }, // default running
+        { &gPlayerAnim_link_fighter_run,                     &gLinkWolfRunAnim },
+        { &gPlayerAnim_link_normal_run,                      &gLinkWolfRunAnim },
+        { &gPlayerAnim_link_fighter_run_long,                &gLinkWolfRunAnim },
+        { &gPlayerAnim_link_normal_run_free,                 &gLinkWolfRunAnim },
+        { &gPlayerAnim_link_normal_run_free,                 &gLinkWolfRunAnim },
     },
     [PLAYER_ANIMGROUP_damage_run] = {
-        { &gPlayerAnim_link_normal_damage_run_free,          &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_damage_run_free,          &TEMP_WOLF_ANIM(55) }, // running while taking damage
         { &gPlayerAnim_link_fighter_damage_run,              &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_damage_run_free,          &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_damage_run_long,         &TEMP_WOLF_ANIM(55) },
@@ -806,7 +806,7 @@ static LinkAnimationHeader* sLinkPlayerAnimations[PLAYER_ANIMGROUP_MAX][PLAYER_A
         { &gPlayerAnim_link_normal_damage_run_free,          &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_heavy_run] = {
-        { &gPlayerAnim_link_normal_heavy_run_free,           &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_heavy_run_free,           &TEMP_WOLF_ANIM(55) }, // running while heavy (iron boots)
         { &gPlayerAnim_link_normal_heavy_run,                &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_heavy_run_free,           &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_heavy_run_long,          &TEMP_WOLF_ANIM(55) },
@@ -814,32 +814,32 @@ static LinkAnimationHeader* sLinkPlayerAnimations[PLAYER_ANIMGROUP_MAX][PLAYER_A
         { &gPlayerAnim_link_normal_heavy_run_free,           &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_waitL] = {
-        { &gPlayerAnim_link_normal_waitL_free,               &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_anchor_waitL,                    &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_waitL_free,               &TEMP_WOLF_ANIM(55) }, // idle animation while Z-targeting; left side of screen
+        { &gPlayerAnim_link_anchor_waitL,                    &TEMP_WOLF_ANIM(55) }, // only on enemy
         { &gPlayerAnim_link_anchor_waitL,                    &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_waitL_long,              &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_waitL_free,               &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_waitL_free,               &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_waitR] = {
-        { &gPlayerAnim_link_normal_waitR_free,               &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_anchor_waitR,                    &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_waitR_free,               &TEMP_WOLF_ANIM(55) }, // idle animation while Z-targeting; right side of screen
+        { &gPlayerAnim_link_anchor_waitR,                    &TEMP_WOLF_ANIM(55) }, // only on enemy
         { &gPlayerAnim_link_anchor_waitR,                    &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_waitR_long,              &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_waitR_free,               &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_waitR_free,               &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_wait2waitR] = {
-        { &gPlayerAnim_link_fighter_wait2waitR_long,         &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_normal_wait2waitR,               &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_fighter_wait2waitR_long,         &TEMP_WOLF_ANIM(55) }, // transition to Z-target idle (waitR/waitL) regardless of side
+        { &gPlayerAnim_link_normal_wait2waitR,               &TEMP_WOLF_ANIM(55) }, // only on enemy
         { &gPlayerAnim_link_normal_wait2waitR,               &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_wait2waitR_long,         &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_wait2waitR_long,         &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_fighter_wait2waitR_long,         &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_normal2fighter] = {
-        { &gPlayerAnim_link_normal_normal2fighter_free,      &TEMP_WOLF_ANIM(55) },
-        { &gPlayerAnim_link_fighter_normal2fighter,          &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_link_normal_normal2fighter_free,      &TEMP_WOLF_ANIM(55) }, // long sword neutral pullout
+        { &gPlayerAnim_link_fighter_normal2fighter,          &TEMP_WOLF_ANIM(55) }, // normal sword neutral pullout, but he seems to have shield ready somehow?
         { &gPlayerAnim_link_fighter_normal2fighter,          &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_normal2fighter_free,      &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_link_normal_normal2fighter_free,      &TEMP_WOLF_ANIM(55) },
@@ -1126,7 +1126,7 @@ static LinkAnimationHeader* sLinkPlayerAnimations[PLAYER_ANIMGROUP_MAX][PLAYER_A
         { &gPlayerAnim_link_normal_up_slope_slip_end_free,   &TEMP_WOLF_ANIM(55) },
     },
     [PLAYER_ANIMGROUP_nwait] = {
-        { &gPlayerAnim_sude_nwait,                           &TEMP_WOLF_ANIM(55) },
+        { &gPlayerAnim_sude_nwait,                           &TEMP_WOLF_ANIM(55) }, // may be cutscene or dungeon related idle anim
         { &gPlayerAnim_lkt_nwait,                            &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_lkt_nwait,                            &TEMP_WOLF_ANIM(55) },
         { &gPlayerAnim_sude_nwait,                           &TEMP_WOLF_ANIM(55) },

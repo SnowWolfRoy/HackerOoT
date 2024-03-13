@@ -3,6 +3,6 @@
 
 #include "gLinkWolfRunAnimData.h"
 LinkAnimationHeader gLinkWolfRunAnim = {
-	{ 59 }, gLinkWolfRunAnimData 
+	{ 62 }, gLinkWolfRunAnimData 
 };
 

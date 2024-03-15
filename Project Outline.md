@@ -8,10 +8,11 @@ get `Markdown Preview for Github Alerts` to preview this document properly
 Feel free to redo the formatting if this sucks to read lol
 
 ## Project
-### Blender
+### Model
 - Do some math to determine the equivalent of 1 unit/frame movement with the floor
 - Can I unparent the "Body" bone, move it, and rename it to be the new sheath/shield bone?
-- I will inevitably have to re-import the model one more time for geometry updates (cards for hair and teeth), so when I do that I might as well solve a way to maintain my IK rig and use it to control a new import
+- I will inevitably have to re-import the model one more time for geometry updates (cards for hair and teeth), so when I do that I might as well solve a way to maintain my IK rig and use it to control a new import, with a new bone added for the sheath/shield on back. Take note of orienation of the bone on adult link model
+- Finish making the textures
 
 ### Debug
 - Try to get an accurate in-game speed value printed to screen just like in GZ
@@ -42,8 +43,7 @@ Feel free to redo the formatting if this sucks to read lol
 > Overall Speed Parameter is set by the 10th value in `sBootData`, the 6th entry "Kokiri Boots as Child", divided by 100 gets the speed in units per frame (upf)
 
 ### Idles
-
-**To-Do**
+- Basic Idle anim  **$\color{lightgreen}Done$** `gLinkWolfWaitAnim`
 - accented anims that play as flavour
     - sitting anim
     - looking around
@@ -52,54 +52,38 @@ Feel free to redo the formatting if this sucks to read lol
 > [!IMPORTANT]
 > List all idle types; hot, cold, etc.
 
-**Complete**
-- Basic Idle anim `gLinkWolfWaitAnim`
+
 
 
 ### Walking
 
-**To-Do**
+- Walking Animation **$\color{lightgreen}Done$** `gLinkWolfWalkAnim` 
 - Animate transitions `..walk_endL` and `..walk_endR`
     - This will require learning about how it distinguishes which foot he is on. I believe it's determined by the current frame of the animation
 
 -   Discover any other Transitions
 
-**Complete**
-- Animation `gLinkWolfWalkAnim`
 
 ### Running
-
-**To-Do**
-- Find and experiment with turning radius
--  Discover Animation Transitions to and from this animation
-
-**Complete**
-- Animation `gLinkWolfRunAnim`
+- Animation **$\color{lightgreen}Done$** `gLinkWolfRunAnim`
 > [!IMPORTANT]
 > I may need to remake the animation after finding out how to measure the floor speed in Blender, and update it to match the actual speed of 10 upf
-
-
-
+- Find and experiment with turning radius
+- Discover Animation Transitions to and from this animation
 
 ### Side-Walking
 
-**To-Do**
 - Make Animation and assess further
 - Decrease speed on Wolf only
-
-**Complete**
 
 ### Back-Walking
-**To-Do**
 - Make Animation and assess further
 - Decrease speed on Wolf only
-
-**Complete**
 
 ## Secondary Movement
 
 ### Rolling
-- Idea to repurpose the roll as a head charge similar to TP's sprint
+- Idea to repurpose the roll as a head charge similar to TP's sprint, perhaps have it be hold A to continue doing it instead of having to re-press it over and over
 ### Jumping
 ### Ledges 
 ### Climbing (Ladders/Vines)
@@ -117,7 +101,9 @@ Decide if he will use a weapon or not
 ### Stab Combo
 ### Jump Attack
 
-## Equipment
+## Equipment/Abilities
+**Ideas:**
+- could be cool to have a magic dash that's even faster than sprint but drains magic, similar to MM zora swim
 
 ## More
 

@@ -9,10 +9,8 @@ Feel free to redo the formatting if this sucks to read lol
 
 ## Project
 ### Model
-- Do some math to determine the equivalent of 1 unit/frame movement with the floor
-- Can I unparent the "Body" bone, move it, and rename it to be the new sheath/shield bone?
-- I will inevitably have to re-import the model one more time for geometry updates (cards for hair and teeth), so when I do that I might as well solve a way to maintain my IK rig and use it to control a new import, with a new bone added for the sheath/shield on back. Take note of orienation of the bone on adult link model
-- Finish making the textures
+- Import the new "export" model and re-apply the transforms to copy the new IK model **$\color{lightgreen}Done$**
+- Finish making the textures, add teeth and hair cards
 
 ### Debug
 - Try to get an accurate in-game speed value printed to screen just like in GZ
@@ -31,6 +29,26 @@ Feel free to redo the formatting if this sucks to read lol
 ### Hit/Hurtboxes
 - `WolfHurtBox` for the cylinder
 
+### Movement Properties
+`sBootData`, the properties are as follows: 
+- Array start `(REG(19))`
+- Strafing min step speed `(REG(30))`
+- Strafing step speed velocity `(REG(32))`
+- Unknown `(REG(34))`
+- Minimum Walk animation speed `(REG(35))`
+- Maximum Walk Animation Speed `(REG(36))`
+- Walk/Run Blend Ratio `(REG(37))`
+- Standard Run Anim Speed `(REG(38))`
+- Deceleration at Neutral stick `(REG(43))`
+- Max Run Speed `(REG(45))`
+- Gravity `(REG(68))`
+- Unknown `(REG(69))`
+- Max Jump Speed Threshold `(IREG(66))`
+- Jump Strength `(IREG(67))`
+- Unknown `(IREG(69))`
+- Unknown `(IREG(68))`
+- Aim Strafing `(MREG(95))`
+
 ### Unsorted things to look into later
 - Find out how to sharpen his turning radius while running
 - Fix Feet on Slopes `Player_OverrideLimbDrawGameplayCommon` -> `if (limbIndex == PLAYER_WOLF_LIMB_L/R_THIGH)`
@@ -40,7 +58,6 @@ Feel free to redo the formatting if this sucks to read lol
 ## Basic
 
 ### Notes
-> Overall Speed Parameter is set by the 10th value in `sBootData`, the 6th entry "Kokiri Boots as Child", divided by 100 gets the speed in units per frame (upf)
 
 ### Idles
 - Basic Idle anim  **$\color{lightgreen}Done$** `gLinkWolfWaitAnim`
@@ -52,9 +69,6 @@ Feel free to redo the formatting if this sucks to read lol
 > [!IMPORTANT]
 > List all idle types; hot, cold, etc.
 
-
-
-
 ### Walking
 
 - Walking Animation **$\color{lightgreen}Done$** `gLinkWolfWalkAnim` 
@@ -65,9 +79,10 @@ Feel free to redo the formatting if this sucks to read lol
 
 
 ### Running
-- Animation **$\color{lightgreen}Done$** `gLinkWolfRunAnim`
+- Animation **$\color{lightgreen}Done$** `gLinkWolfRunAnim` $\color{orange}wip$ back legs need some work, and it seems to not be correctly looping for some reason. maybe test a longer anim and see what happens
 > [!IMPORTANT]
-> I may need to remake the animation after finding out how to measure the floor speed in Blender, and update it to match the actual speed of 10 upf
+> I may need to remake the animation after finding out how to measure the floor speed in Blender, and update it to match the actual speed of 10 upf;
+
 - Find and experiment with turning radius
 - Discover Animation Transitions to and from this animation
 
@@ -93,7 +108,7 @@ Sword Dog Reference Ideas: https://www.youtube.com/watch?v=g1_sr46finE Zacian in
 
 play TP, read TP manga
 
-Decide if he will use a weapon or not
+Assign "Unequipped (Teeth/Claws)" to Short Sword state/anims and assign "Master Sword" to Long Sword state/anims
 > [!IMPORTANT]
 > list all attack types
 ### L Combo
